@@ -3,7 +3,6 @@ const { User, Aliment } = require('../sequelize-config');
 const getUserAliments = async (req, res) => {
     try {
         const userId = parseInt(req.params.uid);
-        console.log(userId);
         if (isNaN(userId)) {
             res.status(400).json({ message: 'User ID should be a number' });
         } else {

@@ -1,5 +1,5 @@
 
-const { User, Aliment } = require("../sequelize-config");
+const { User, Aliment, Reservation } = require("../sequelize-config");
 
 const getUsers = async (req, res) => {
     try {
@@ -26,7 +26,7 @@ const getUser = async (req, res) => {
             res.status(400).json({ message: 'User ID should be a number' });
         } else {
             const foundUser = await User.findByPk(userId, {
-                include: [Aliment]
+                include: [Reservation, Aliment]
             });
             if (foundUser) {
                 res.status(200).json(foundUser);
