@@ -12,8 +12,13 @@ const getUsers = async (req, res) => {
 
 const createUser = async (req, res) => {
     try {
-        const newUser = await User.create(req.body);
-        res.status(201).json(newUser);
+        if(req.body.userName && req.body.password && req.body.email){
+            const newUser = await User.create(req.body);
+            res.status(201).json(newUser)
+        }else{
+            res.status(400).json({message:"Username, password and email are mandatory"})
+
+        }
     } catch (error) {
         console.warn(error);
     }
@@ -47,12 +52,16 @@ const updateUser = async (req, res) => {
         } else {
             const foundUser = await User.findByPk(userId);
             if (foundUser) {
-                foundUser.userName = req.body.userName;
-                foundUser.password = req.body.password;
-                foundUser.name = req.body.name;
-                foundUser.email = req.body.email;
-                await foundUser.save();
-                res.status(200).json(foundUser);
+                if(req.body.userName && req.body.password && req.body.email){
+                    foundUser.userName = req.body.userName;
+                    foundUser.password = req.body.password;
+                    foundUser.name = req.body.name;
+                    foundUser.email = req.body.email;
+                    await foundUser.save();
+                    res.status(200).json(foundUser);
+                }else{
+                    res.status(400).json({message:"Username, password and email are mandatory"})
+                }
             } else {
                 res.status(404).json({ message: 'User not found' });
             }
