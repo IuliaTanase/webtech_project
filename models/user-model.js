@@ -42,7 +42,14 @@ module.exports = (sequelize, DataTypes) => {
                 isEmail: true,
                 len: [10, 50],
             }
-        }
-    });
+        },
+    },
+        {
+            defaultScope: {
+                attributes: {
+                    exclude: ['password']
+                },
+            }
+        });
 
 }

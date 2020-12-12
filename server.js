@@ -2,7 +2,7 @@ const express = require('express');
 const Sequelize = require('sequelize');
 const cors = require('cors');
 const bodyParser = require('body-parser');
-require('dotenv').config()  //pentru a folosi propriile DB_NAME,DB_USERNAME,DB_PASSWORD in .env
+require('dotenv').config()
 
 
 const userRouter = require('./routers/user-router');
@@ -30,7 +30,7 @@ app.use('/api/users', userRouter);
 app.use('/api/users', userAlimentsRouter);
 app.use('/api/aliments', alimentRouter);
 app.use('/api/users', reservationRouter);
-app.use('/api/user',loginRouter);
+app.use('/api/users', loginRouter);
 
 app.use((error, req, res, next) => {
     console.warn(error);

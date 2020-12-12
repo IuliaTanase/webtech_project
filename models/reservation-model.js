@@ -1,3 +1,5 @@
+const { Aliment } = require("../sequelize-config");
+
 module.exports = (sequelize, DataTypes) => {
     return sequelize.define('reservation', {
         date: {
@@ -18,5 +20,8 @@ module.exports = (sequelize, DataTypes) => {
                 notEmpty: true
             }
         }
-    });
+    },
+        {
+            include: [Aliment]
+        });
 }

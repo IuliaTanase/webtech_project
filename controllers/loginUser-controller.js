@@ -1,36 +1,35 @@
 
-const {User} =  require('../sequelize-config');
+const { User } = require('../sequelize-config');
 
 
-const getLoginUser = async (req,res)=>{
-    try{
+const loginUser = async (req, res) => {
+    try {
         const username = req.body.userName;
         const pass = req.body.password;
-        if(username){
-            if(pass){
-                const userlogged = await User.findOne({where:{
-                    userName: username,
-                    password: pass
-                }})
+        if (username) {
+            if (pass) {
+                const userlogged = await User.findOne({
+                    where: {
+                        userName: username,
+                        password: pass
+                    },
+                });
 
-                if(userlogged){
-                    res.status(201).json({message:`${username} logged in successfully`})
-                }else
-                {
-                    res.status(404).json({message:"user not found"})
+                if (userlogged) {
+                    res.status(200).json(userlogged);
+                } else {
+                    res.status(404).json({ message: "User not found" });    //{ message: `${username} logged in successfully` }
                 }
-            }else{
-                res.status(400).json({message:"password is mandatory"})
+            } else {
+                res.status(400).json({ message: "Password is mandatory" });
             }
-           
-        }else{
-            res.status(400).json({message:"username is mandatory"})
+        } else {
+            res.status(400).json({ message: "Username is mandatory" });
         }
-        
-    }catch(error){
+    } catch (error) {
         console.log(error)
-        res.status(500).json({message:"server error"})
+        res.status(500).json({ message: "server error" });
     }
 }
 
-module.exports={getLoginUser}
+module.exports = { loginUser }

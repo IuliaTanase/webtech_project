@@ -1,5 +1,4 @@
-const e = require("express");
-const { User, Reservation } = require("../sequelize-config");
+const { User, Reservation, Aliment } = require("../sequelize-config");
 
 const getReservations = async (req, res) => {
     try {
@@ -29,7 +28,6 @@ const getReservation = async (req, res) => {
             const user = await User.findByPk(userId);
             if (user) {
                 const reservations = await user.getReservations({ id: req.params.rid });
-                console.log(reservations);
                 const reservation = reservations.shift();
                 if (reservation) {
                     res.status(200).json(reservation);
@@ -53,10 +51,20 @@ const createReservation = async (req, res) => {
         } else {
             const user = await User.findByPk(userId);
             if (user) {
-                const newReservation = await Reservation.create(req.body);
-                newReservation.userId = user.id;
-                await newReservation.save();
-                res.status(201).json(newReservation);
+                const { alimentsIds } = req.body;
+                if (alimentsIds) {
+                    const newReservation = await Reservation.create(req.body);
+                    newReservation.userId = user.id;
+
+                    for (let i = 0; i < alimentsIds.length; i++) {
+                        const foundAliment = await Aliment.findByPk(alimentsIds[i]);
+                        newReservation.addAliment(foundAliment);
+                    }
+                    await newReservation.save();
+                    res.status(201).json(newReservation);
+                } else {
+                    res.status(400).json({ message: 'Select at least one aliment to reserve' });
+                }
             } else {
                 res.status(404).json({ message: 'User not found' });
             }

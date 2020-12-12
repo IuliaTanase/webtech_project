@@ -1,24 +1,24 @@
 
 const { Aliment } = require('../sequelize-config');
+const { Reservation } = require('../sequelize-config');
 
 const getAliments = async (req, res) => {
     try {
         const aliments = await Aliment.findAll();
         res.status(200).json(aliments);
-    } catch (err) {
+    } catch (error) {
         console.warn(error);
     }
 }
 
 const createAliment = async (req, res) => {
     try {
-        if(req.body.name && req.body.expirationDate){
+        if (req.body.name && req.body.expirationDate) {
             const newAliment = await Aliment.create(req.body);
             res.status(201).json(newAliment);
-        }else{
-            res.status(400).json({message:"Name and expiraton date are mandatory"})
+        } else {
+            res.status(400).json({ message: "Name and expiration date are mandatory" })
         }
-        
     } catch (error) {
         console.warn(error);
     }
@@ -50,18 +50,17 @@ const updateAliment = async (req, res) => {
         } else {
             const foundAliment = await Aliment.findByPk(alimentId);
             if (foundAliment) {
-                if(req.body.name && req.body.expirationDate){
+                if (req.body.name && req.body.expirationDate) {
                     foundAliment.name = req.body.name;
                     foundAliment.category = req.body.category;
                     foundAliment.expirationDate = req.body.expirationDate;
                     foundAliment.ingredients = req.body.ingredients;
                     foundAliment.weight = req.body.weight;
                     await foundAliment.save();
-                    res.status(200).json(foundAliment);  
-                }else{
-                    res.status(400).json({message:"Name and expiration date are mandatory"})
+                    res.status(200).json(foundAliment);
+                } else {
+                    res.status(400).json({ message: "Name and expiration date are mandatory" })
                 }
-                
             } else {
                 res.status(404).json({ message: 'Aliment not found' });
             }

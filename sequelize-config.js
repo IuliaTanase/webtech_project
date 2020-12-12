@@ -18,13 +18,12 @@ Aliment.belongsTo(User);
 User.hasMany(Reservation);
 Reservation.belongsTo(User);
 
-//TODO
-// Reservation.hasMany(Aliment);
-// Aliment.belongsTo(Reservation);
+Reservation.hasMany(Aliment);
+Aliment.belongsTo(Reservation);
 
-sequelize.sync(
-    // { force: true }
-);
+// sequelize.sync(
+//     { force: true }
+// );
 
 module.exports = {
     User,
