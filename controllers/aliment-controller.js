@@ -56,6 +56,7 @@ const updateAliment = async (req, res) => {
                     foundAliment.expirationDate = req.body.expirationDate;
                     foundAliment.ingredients = req.body.ingredients;
                     foundAliment.weight = req.body.weight;
+                    foundAliment.status = req.body.status;
                     await foundAliment.save();
                     res.status(200).json(foundAliment);
                 } else {

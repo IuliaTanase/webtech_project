@@ -38,6 +38,12 @@ module.exports = (sequelize, DataTypes) => {
             validate: {
                 min: 0,
             }
+        },
+        status: {
+            type: DataTypes.ENUM,
+            allowNull: true,
+            values: ['AVAILABLE', 'RESERVED'],
+            defaultValue: 'AVAILABLE'
         }
     });
 }

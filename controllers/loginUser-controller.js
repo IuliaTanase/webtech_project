@@ -18,7 +18,7 @@ const loginUser = async (req, res) => {
                 if (userlogged) {
                     res.status(200).json(userlogged);
                 } else {
-                    res.status(404).json({ message: "User not found" });    //{ message: `${username} logged in successfully` }
+                    res.status(404).json({ message: "User not found" });
                 }
             } else {
                 res.status(400).json({ message: "Password is mandatory" });

@@ -81,6 +81,7 @@ const updateUserAliment = async (req, res) => {
                     aliment.expirationDate = req.body.expirationDate;
                     aliment.ingredients = req.body.ingredients;
                     aliment.weight = req.body.weight;
+                    aliment.status = req.body.status;
                     await aliment.save();
                     res.status(200).json(aliment);
                 } else {

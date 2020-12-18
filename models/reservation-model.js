@@ -13,10 +13,9 @@ module.exports = (sequelize, DataTypes) => {
         },
         minutesUntilCancel: {
             type: DataTypes.INTEGER,
-            allowNull: false,
+            allowNull: true,
             defaultValue: 10,
             validate: {
-                min: 5,
                 notEmpty: true
             }
         }
