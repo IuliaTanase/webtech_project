@@ -1,0 +1,150 @@
+  .loginFormContainer,
+  .createAccountContainer {
+    position: absolute;
+    z-index: 100;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    background-color: #d6ecd7;
+  }
+  
+  
+  .form-wrapper {
+    width: 400px;
+    display: flex;
+    flex-direction: column;
+    padding: 20px 40px;
+    border-radius: 10px;
+    box-shadow: 0px 10px 50px #555;
+    background-color: #ffffff;
+  }
+  
+  form {
+    width: 100%;
+    display: flex;
+    flex-wrap: wrap;
+  }
+  
+  h1, h2 {
+    text-align: center;
+    width: 100%;
+    color: #111;
+    font-weight: 600;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen,
+      Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif;
+  }
+
+  .inputLogin {
+    width: 320px;
+  }
+  
+  label {
+    font-size: 0.8em;
+    margin-bottom: 0.25em;
+    color: #222;
+    font-weight: lighter;
+  }
+  
+  input::placeholder {
+    font-weight: lighter;
+    color: #999;
+  }
+  
+  .firstName {
+    margin-right: 1%;
+  }
+  
+  .lastName {
+    margin-left: 1%;
+  }
+  
+  .firstName,
+  .lastName,
+  .email,
+  .userName,
+  .password {
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 15px;
+  }
+  
+  .firstName,
+  .lastName {
+    width: 49%;
+  }
+  
+  .email,
+  .userName,
+  .password {
+    width: 100%;
+  }
+  
+  .createAccount, .signIn {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+  
+  .createAccount button, 
+  .signIn button {
+    width: 100%;
+    letter-spacing: 1px;
+    margin-top: 1em;
+    margin-bottom: 0.25em;
+  }
+  
+  .createAccount small {
+    color: #999;
+    font-weight: lighter;
+  }
+
+  .createAccount small:hover {
+    cursor: pointer;
+  }
+
+  #errorMessage {
+    color: rgb(175, 41, 41);
+    font-weight: lighter;
+  }
+
+  #message {
+    color: rgb(14, 85, 50);
+    font-weight: lighter;
+  }
+
+  .buttons {
+    display: flex;
+    justify-content: center;
+  }
+
+  #btnCreateAccount {
+    margin-right: 50px;
+    width: 200px;
+  }
+
+  #btnSignIn {
+    width: 200px;
+  }
+
+  #background {
+    background-repeat: no-repeat;
+    background-size: cover;
+    position: absolute; 
+    top: 0px; 
+    bottom: 0px; 
+    left: 0px; 
+    right: 0px; 
+  }
+
+  #homeContainer {
+    position: absolute;
+    z-index: 100;
+    top: 45%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+  }
