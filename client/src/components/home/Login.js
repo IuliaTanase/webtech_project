@@ -61,7 +61,9 @@ class Login extends React.Component {
                     localStorage.setItem('user', JSON.stringify(user));
                     setTimeout(this.goToAliments, 1500);
                 } else {
-                    alert('HTTP-Error: ' + response.status);
+                    this.setState({
+                        errorMessage: 'Wrong username or password!'
+                    })
                 }
             }
         }

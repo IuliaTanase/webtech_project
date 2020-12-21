@@ -1,15 +1,16 @@
-import React from "react"
-import './Aliments.css'
+import React from 'react'
+import '../aliments/Aliments.css'
 import { DataView } from 'primereact/dataview';
 import { Button } from 'primereact/button';
 import Menu from "../menubar/Menu";
 
-class AlimentsContainer extends React.Component {
+class UserAlimentsContainer extends React.Component {
     constructor() {
         super();
+
         this.state = {
             aliments: [],
-            layout: 'grid',
+            layout: 'list',
         };
 
         this.itemTemplate = this.itemTemplate.bind(this);
@@ -57,13 +58,20 @@ class AlimentsContainer extends React.Component {
     }
 
     async componentDidMount() {
-        const response = await fetch("http://localhost:8080/api/aliments");
+        const SERVER = "http://localhost:8080/api/users";
+        const userId = JSON.parse(localStorage.getItem("user")).id;
 
-        const aliments = await response.json();
-        let alim = this.setAlimentImage(aliments);
-        this.setState({
-            aliments: alim
-        });
+        const response = await fetch(`${SERVER}/${userId}/aliments`);
+        if (response.ok) {
+            const aliments = await response.json();
+            let alim = this.setAlimentImage(aliments);
+            this.setState({
+                aliments: alim
+            });
+        } else {
+            alert('HTTP-error: ' + response.status);
+        }
+
     }
 
     itemTemplate(aliment) {
@@ -71,47 +79,35 @@ class AlimentsContainer extends React.Component {
             return;
         }
 
-        return this.renderGridItem(aliment);
+        return this.renderListItem(aliment);
     }
 
-    renderGridItem(data) {
+    renderListItem(data) {
         return (
-            <>
-                <div className="p-col-12 p-lg-3 p-sm-6">
-                    <div className="product-grid-item card">
-                        <div className="product-grid-item-top">
-                            <div>
-                                <i className="pi pi-tag product-category-icon"></i>
-                                <span className="product-category">{data.category ? data.category.toUpperCase() : "-"}</span>
-                            </div>
-                            <span className={`product-badge status-${data.status.toLowerCase()}`}>{data.status}</span>
-                        </div>
-                        <div className="product-grid-item-content">
-                            <img src={`images/${data.image}`} onError={(e) => e.target.src = 'https://www.primefaces.org/wp-content/uploads/2020/05/placeholder.png'} alt={data.name} />
-                            <div className="product-name">{data.name}</div>
-                            <div className="product-ingredients">{data.ingredients}</div>
-                            <div className="product-expirationDate">
-                                <i className="pi pi-calendar product-category-icon"></i>{data.expirationDate.substring(0, 10) + "--->" + data.expirationDate.substring(11, 19)}
-                            </div>
-                        </div>
-                        <div className="product-grid-item-bottom">
-                            <div>
-                                <i className="pi pi-th-large product-category-icon"></i>
-                                <span className="product-weight">{data.weight} Kg</span>
-                            </div>
-                            <Button className="p-button-sm" icon="pi pi-shopping-cart" label="GET IT" disabled={data.status === 'RESERVED'}></Button>
-                        </div>
+            <div className="p-col-12">
+                <div className="product-list-item">
+                    <img src={`images/${data.image}`} onError={(e) => e.target.src = 'https://www.primefaces.org/wp-content/uploads/2020/05/placeholder.png'} alt={data.name} />
+                    <div className="product-list-detail">
+                        <div className="product-name">{data.name}</div>
+                        <div className="product-ingredients">{data.ingredients}</div>
+                        <i className="pi pi-tag product-category-icon"></i><span className="product-category">{data.category}</span>
+                        <div className="product-price">{data.weight}Kg</div>
+                    </div>
+                    <div className="product-list-action">
+                        <span className={`product-badge status-${data.status.toLowerCase()}`}>{data.status}</span>
+                        <Button icon="pi pi-pencil" label="Edit" style={{ marginTop: "30px" }} />
                     </div>
                 </div>
-            </>
+            </div>
         );
     }
+
 
     render() {
         return (
             <>
                 <div id="background" style={{ backgroundImage: "url(/images/green-leaves.svg)" }}></div>
-                <h1>Aliments</h1>
+                <h1>My aliments</h1>
                 <Menu />
                 <div className="dataview-demo" >
                     <div className="card" >
@@ -124,4 +120,4 @@ class AlimentsContainer extends React.Component {
     }
 }
 
-export default AlimentsContainer;
+export default UserAlimentsContainer;

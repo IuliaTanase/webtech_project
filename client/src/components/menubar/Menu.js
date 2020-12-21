@@ -1,10 +1,16 @@
 import React from 'react'
 import { Menubar } from 'primereact/menubar';
+import { Dialog } from 'primereact/dialog';
+import { Button } from 'primereact/button';
 import { withRouter } from "react-router-dom";
 
 class Menu extends React.Component {
     constructor() {
         super();
+
+        this.state = {
+            displayConfirmation: false
+        }
 
         this.items = [
             {
@@ -84,18 +90,47 @@ class Menu extends React.Component {
                 label: 'Log out',
                 icon: 'pi pi-fw pi-sign-out',
                 command: () => {
-                    alert('Are you sure?');
-                    this.props.history.push('/');
+                    this.setState({
+                        displayConfirmation: true
+                    })
+
                 },
             }
         ]
 
+        this.acceptedLogOut = () => {
+            localStorage.removeItem("user");
+            this.props.history.push('/');
+        }
+
+        this.onHide = () => {
+            this.setState({
+                displayConfirmation: false
+            })
+        }
+
+    }
+
+    renderFooter() {
+        return (
+            <div>
+                <Button label="No" icon="pi pi-times" onClick={() => this.onHide()} className="p-button-text" />
+                <Button label="Yes" icon="pi pi-check" onClick={() => this.acceptedLogOut()} autoFocus />
+            </div>
+        );
     }
 
     render() {
         return (
             <>
-                <Menubar style={{ backgroundColor: "#ebebeb", marginBottom: "80px" }} model={this.items} />
+                <Menubar style={{ backgroundColor: "#ebebeb", marginBottom: "80px", position: "relative", zIndex: "2" }} model={this.items} />
+                <Dialog header="Log out" visible={this.state.displayConfirmation} modal style={{ width: '350px' }}
+                    footer={this.renderFooter()} onHide={() => this.onHide()}>
+                    <div className="confirmation-content">
+                        <i className="pi pi-exclamation-triangle p-mr-3" style={{ fontSize: '2rem' }} />
+                        <span>Are you sure you want to log out?</span>
+                    </div>
+                </Dialog>
             </>
         )
     }

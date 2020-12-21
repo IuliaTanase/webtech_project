@@ -21,7 +21,6 @@ const getUserAliments = async (req, res) => {
 
 const createUserAliment = async (req, res) => {
     try {
-        console.log(req.params.uid);
         const userId = parseInt(req.params.uid);
         if (isNaN(userId)) {
             res.status(400).json({ message: 'User ID should be a number' });

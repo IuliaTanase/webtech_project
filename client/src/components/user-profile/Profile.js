@@ -42,14 +42,13 @@ class Profile extends React.Component {
                         })
                     });
                     if (response.ok) {
-                        await response.json();
+                        let updatedUser = await response.json();
                         this.setState({
                             message: 'Changes were successfully applied!',
-                            statusOk: true
-                        });
-                        this.setState({
+                            statusOk: true,
                             editMode: false
                         });
+                        localStorage.setItem("user", JSON.stringify(updatedUser));
                         setTimeout(() => { this.setState({ message: '' }) }, 2500);
                     } else {
                         if (response.status === 409) {
@@ -110,6 +109,7 @@ class Profile extends React.Component {
     render() {
         return (
             <>
+                <div id="background" style={{ backgroundImage: "url(/images/green-leaves.svg)" }}></div>
                 <h1>My profile</h1>
                 <Menu />
                 <div id="formContainer" className="p-shadow-24">
@@ -161,7 +161,7 @@ class Profile extends React.Component {
                     <p id={this.state.statusOk ? "message" : "errorMessage"}>{this.state.message}</p>
                     <div className="buttons">
                         <Button id="editButton" label={this.state.editMode ? "Save changes" : "Edit"} type="button"
-                            icon="pi pi-user-edit" iconPos="left" onClick={this.handleClick} />
+                            icon={this.state.editMode ? "pi pi-check-square" : "pi pi-user-edit"} iconPos="left" onClick={this.handleClick} />
                     </div>
                 </div>
 
