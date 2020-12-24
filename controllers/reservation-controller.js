@@ -8,7 +8,9 @@ const getReservations = async (req, res) => {
         } else {
             const user = await User.findByPk(userId);
             if (user) {
-                const reservations = await user.getReservations();
+                const reservations = await user.getReservations({
+                    include: [Aliment]
+                });
                 res.status(200).json(reservations);
             } else {
                 res.status(404).json({ message: 'User not found' });
@@ -85,6 +87,16 @@ const deleteReservation = async (req, res) => {
                 const reservations = await user.getReservations({ id: req.params.rid });
                 const reservation = reservations.shift();
                 if (reservation) {
+                    const aliments = await Aliment.findAll({
+                        where: {
+                            reservationId: reservation.id
+                        }
+                    });
+                    let newAliments = aliments;
+                    for (let aliment of newAliments) {
+                        aliment.status = 'AVAILABLE';
+                        await aliment.save();
+                    }
                     await reservation.destroy();
                     res.status(204).json('No content');
                 } else {

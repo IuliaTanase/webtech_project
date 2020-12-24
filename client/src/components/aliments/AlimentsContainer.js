@@ -3,6 +3,8 @@ import './Aliments.css'
 import { DataView } from 'primereact/dataview';
 import { Button } from 'primereact/button';
 import Menu from "../menubar/Menu";
+import { Toast } from 'primereact/toast';
+
 
 class AlimentsContainer extends React.Component {
     constructor() {
@@ -54,6 +56,57 @@ class AlimentsContainer extends React.Component {
             }
             return alim;
         }
+
+        this.handleClick = async (data) => {
+            const alimentId = data.id;
+            const alimentUserId = data.userId;
+
+            const currentUserId = JSON.parse(localStorage.getItem("user")).id;
+
+            const res = await fetch(`http://localhost:8080/api/users/${currentUserId}/reservations`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    date: new Date().toISOString(),
+                    alimentsIds: [alimentId]
+                })
+            });
+            if (res.ok) {
+                const newReservation = await res.json();
+                const response = await fetch(`http://localhost:8080/api/users/${alimentUserId}/aliments/${alimentId}`, {
+                    method: 'PUT',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        ...data, status: 'RESERVED', reservationId: newReservation.id
+                    })
+                });
+                if (response.ok) {
+                    const updatedAliment = await response.json();
+                    let newAliments = this.state.aliments;
+                    const foundIndex = newAliments.findIndex(aliment => aliment.id === updatedAliment.id);
+                    if (foundIndex !== -1) {
+                        newAliments[foundIndex] = updatedAliment;
+                        newAliments = this.setAlimentImage(newAliments);
+                        this.setState({ aliments: newAliments });
+                        this.showBottomRightSuccess();
+                    }
+
+                } else {
+                    alert(response.status);
+                }
+            } else {
+                alert(res.status);
+            }
+        }
+
+    }
+
+    showBottomRightSuccess() {
+        this.toastBR.show({ severity: 'success', summary: 'Success', detail: 'Aliment was successfully reserved!', life: 3000 });
     }
 
     async componentDidMount() {
@@ -99,7 +152,7 @@ class AlimentsContainer extends React.Component {
                                 <i className="pi pi-th-large product-category-icon"></i>
                                 <span className="product-weight">{data.weight} Kg</span>
                             </div>
-                            <Button className="p-button-sm" icon="pi pi-shopping-cart" label="GET IT" disabled={data.status === 'RESERVED'}></Button>
+                            <Button className="p-button-sm" icon="pi pi-shopping-cart" label="GET IT" disabled={data.status === 'RESERVED'} onClick={() => this.handleClick(data)}></Button>
                         </div>
                     </div>
                 </div>
@@ -119,6 +172,7 @@ class AlimentsContainer extends React.Component {
                             itemTemplate={this.itemTemplate} paginator rows={8} />
                     </div>
                 </div>
+                <Toast ref={(el) => this.toastBR = el} position="bottom-right" />
             </>
         )
     }

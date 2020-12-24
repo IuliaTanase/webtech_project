@@ -45,17 +45,25 @@ class AddAliment extends React.Component {
                     await response.json();
                     this.setState({
                         message: 'Aliment was successfully added to your aliments list!',
+                        name: '',
+                        weight: '',
+                        ingredients: '',
+                        category: '',
+                        date: null,
                     });
                     this.showBottomRightSuccess();
+                    setTimeout(() => this.setState({ message: '' }), 3000);
                 } else {
                     if (response.status === 404) {
                         this.setState({
-                            message: "Ups! It seems like the user doesn't exist."
+                            message: "Oops! It seems like the user doesn't exist."
                         });
+                        this.showBottomRightError("Oops! It seems like the user doesn't exist.");
                     } else {
                         this.setState({
-                            message: "Ups! A problem has occured. Try again later."
+                            message: "Oops! A problem has occured. Try again later."
                         });
+                        this.showBottomRightError('Oops! A problem has occured. Try again later.');
                     }
                 }
             }
@@ -99,8 +107,8 @@ class AddAliment extends React.Component {
         this.toastBR.show({ severity: 'success', summary: 'Success', detail: 'Aliment was successfully added to your aliments list!', life: 3000 });
     }
 
-    showBottomRightError() {
-        this.toastBR.show({ severity: 'error', summary: 'Error', detail: 'Ups! A problem has occured. Try again later.', life: 3000 });
+    showBottomRightError(detail) {
+        this.toastBR.show({ severity: 'error', summary: 'Error', detail: `${detail}`, life: 3000 });
     }
 
 

@@ -3,14 +3,28 @@ import '../aliments/Aliments.css'
 import { DataView } from 'primereact/dataview';
 import { Button } from 'primereact/button';
 import Menu from "../menubar/Menu";
+import { Dialog } from 'primereact/dialog';
+import { InputText } from 'primereact/inputtext';
+import { Toast } from 'primereact/toast';
 
 class UserAlimentsContainer extends React.Component {
     constructor() {
         super();
 
+        const SERVER = 'http://localhost:8080/api/users';
+
         this.state = {
             aliments: [],
             layout: 'list',
+            message: '',
+            statusOk: true,
+            displayDialog: false,
+            selectedItem: null,
+            toastBR: '',
+            id: '',
+            name: '',
+            ingredients: '',
+            weight: ''
         };
 
         this.itemTemplate = this.itemTemplate.bind(this);
@@ -55,6 +69,90 @@ class UserAlimentsContainer extends React.Component {
             }
             return alim;
         }
+
+        this.handleEditClick = (data) => {
+
+            this.setState({
+                selectedItem: data,
+                displayDialog: true,
+                id: data.id,
+                name: data.name,
+                ingredients: data.ingredients,
+                weight: data.weight
+            });
+        }
+
+        this.onHide = () => {
+            this.setState({
+                displayDialog: false
+            });
+        }
+
+        this.saveChanges = async () => {
+            if (this.isCorrectlyCompleted()) {
+                const userId = JSON.parse(localStorage.getItem("user")).id;
+                const response = await fetch(`${SERVER}/${userId}/aliments/${this.state.id}`, {
+                    method: 'PUT',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        ...this.state.selectedItem,
+                        name: this.state.name,
+                        ingredients: this.state.ingredients,
+                        weight: this.state.weight
+                    })
+                });
+                if (response.ok) {
+                    const updatedAliment = await response.json();
+                    let newAliments = this.state.aliments;
+                    const foundIndex = newAliments.findIndex(aliment => aliment.id === updatedAliment.id);
+                    if (foundIndex !== -1) {
+                        newAliments[foundIndex] = updatedAliment;
+                        newAliments = this.setAlimentImage(newAliments);
+                        this.setState({ aliments: newAliments });
+                        this.showBottomRightSuccess();
+                        this.onHide();
+                    }
+                } else {
+                    this.showBottomRightError("An error has occured");
+                }
+            }
+        }
+
+        this.isCorrectlyCompleted = () => {
+            const match = /^[0-9]+$/;
+            if (this.state.name.length < 3 || !this.state.name || this.state.name.match(match)) {
+                this.setState({
+                    message: 'The aliment must have at least 3 letters!',
+                    statusOk: false
+                });
+                return false;
+            } else {
+                if (!this.state.weight || this.state.weight < 0) {
+                    this.setState({
+                        message: 'The aliment weight must be properly completed!',
+                        statusOk: false
+                    });
+                    return false;
+                } else {
+                    if (!this.state.ingredients || this.state.ingredients.length < 2) {
+                        this.setState({
+                            message: 'Ingredients must have at least 2 letters!',
+                            statusOk: false
+                        });
+                        return false;
+                    } else {
+                        this.setState({
+                            message: '',
+                            statusOk: true
+                        });
+                        return true;
+                    }
+                }
+            }
+        }
+
     }
 
     async componentDidMount() {
@@ -82,6 +180,14 @@ class UserAlimentsContainer extends React.Component {
         return this.renderListItem(aliment);
     }
 
+    showBottomRightSuccess() {
+        this.toastBR.show({ severity: 'success', summary: 'Success', detail: 'Aliment was successfully modified!', life: 3000 });
+    }
+
+    showBottomRightError(detail) {
+        this.toastBR.show({ severity: 'error', summary: 'Error', detail: `${detail}`, life: 3000 });
+    }
+
     renderListItem(data) {
         return (
             <div className="p-col-12">
@@ -95,7 +201,7 @@ class UserAlimentsContainer extends React.Component {
                     </div>
                     <div className="product-list-action">
                         <span className={`product-badge status-${data.status.toLowerCase()}`}>{data.status}</span>
-                        <Button icon="pi pi-pencil" label="Edit" style={{ marginTop: "30px" }} />
+                        <Button icon="pi pi-pencil" label="Edit" style={{ marginTop: "30px" }} onClick={() => this.handleEditClick(data)} />
                     </div>
                 </div>
             </div>
@@ -115,6 +221,36 @@ class UserAlimentsContainer extends React.Component {
                             itemTemplate={this.itemTemplate} paginator rows={8} />
                     </div>
                 </div>
+                <Dialog header="Edit aliment" visible={this.state.displayDialog} style={{ width: '50vw' }} onHide={this.onHide}>
+                    {
+                        this.state.selectedItem &&
+                        <>
+                            <div id="editContainer">
+                                <div className="attributeContainer">
+                                    <label className="labels">Name:</label>
+                                    <InputText placeholder={this.state.name} value={this.state.name}
+                                        className="inputs" onChange={(e) => this.setState({ name: e.target.value })} />
+                                </div>
+                                <div className="attributeContainer">
+                                    <label className="labels">Ingredients:</label>
+                                    <InputText required placeholder={this.state.ingredients} value={this.state.ingredients}
+                                        className="inputs" onChange={(e) => this.setState({ ingredients: e.target.value })} />
+                                </div>
+                                <div className="attributeContainer">
+                                    <label className="labels">Weight:</label>
+                                    <InputText required placeholder={this.state.weight} value={this.state.weight}
+                                        className="inputs" onChange={(e) => this.setState({ weight: e.target.value })} />
+                                </div>
+                            </div>
+                            <p id="errorMessage">{this.state.message}</p>
+                            <div style={{ display: "flex", justifyContent: "center", marginTop: "30px" }}>
+                                <Button label="Apply" onClick={this.saveChanges} />
+                            </div>
+
+                        </>
+                    }
+                </Dialog>
+                <Toast ref={(el) => this.toastBR = el} position="bottom-right" />
             </>
         )
     }

@@ -12,7 +12,7 @@
     margin: 0;
 }
 
-.dataview-demo .product-expirationDate {
+.dataview-demo  {
     margin: 0 0 1rem 0;
 }
 
@@ -108,7 +108,42 @@ h1 {
     bottom: 0px; 
     left: 0px; 
     right: 0px; 
-  }
+}
+
+#editContainer {
+    display: flex;
+    flex-direction: column;
+}
+
+.attributeContainer {
+    display: flex;
+}
+
+.inputs {
+    flex-grow: 1;
+}
+
+.labels {
+    font-weight: 400;
+    font-style: italic;
+    margin-left: 20px;
+    width: 100px;
+}
+
+#errorMessage {
+    color: rgb(175, 41, 41);
+    text-align: center;
+    font-weight: lighter;
+    font-size: 1.3rem;
+}
+
+.prod-expDate, .prod-category {
+    margin-top: 10px;
+}
+
+.product-expirationDate {
+    margin: 0 0 1rem 0.5rem;
+}
 
 @media screen and (max-width: 576px) {
     .dataview-demo .product-list-item {

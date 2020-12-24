@@ -65,6 +65,7 @@ const getUserAliment = async (req, res) => {
 }
 
 const updateUserAliment = async (req, res) => {
+    console.log(1);
     try {
         const userId = parseInt(req.params.uid);
         if (isNaN(userId)) {
@@ -72,15 +73,16 @@ const updateUserAliment = async (req, res) => {
         } else {
             const user = await User.findByPk(userId);
             if (user) {
-                const aliments = await user.getAliments({ id: req.params.aid });
-                const aliment = aliments.shift();
+                const aliment = await Aliment.findByPk(req.params.aid);
                 if (aliment) {
+                    aliment.id = req.body.id;
                     aliment.name = req.body.name;
                     aliment.category = req.body.category;
                     aliment.expirationDate = req.body.expirationDate;
                     aliment.ingredients = req.body.ingredients;
                     aliment.weight = req.body.weight;
                     aliment.status = req.body.status;
+                    aliment.reservationId = req.body.reservationId;
                     await aliment.save();
                     res.status(200).json(aliment);
                 } else {

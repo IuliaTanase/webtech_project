@@ -4,6 +4,7 @@ import "./Profile.css"
 import 'primeflex/primeflex.css';
 import { InputText } from 'primereact/inputtext';
 import { Button } from 'primereact/button';
+import { Toast } from 'primereact/toast';
 
 class Profile extends React.Component {
     constructor(props) {
@@ -20,7 +21,8 @@ class Profile extends React.Component {
             lastName: user.name.split(" ")[1],
             editMode: false,
             message: '',
-            statusOk: true
+            statusOk: true,
+            toastBR: ''
         }
 
         this.handleClick = async () => {
@@ -48,6 +50,7 @@ class Profile extends React.Component {
                             statusOk: true,
                             editMode: false
                         });
+                        this.showBottomRightSuccess();
                         localStorage.setItem("user", JSON.stringify(updatedUser));
                         setTimeout(() => { this.setState({ message: '' }) }, 2500);
                     } else {
@@ -56,6 +59,13 @@ class Profile extends React.Component {
                                 message: 'Oops, this user already exists!',
                                 statusOk: false
                             });
+                            this.showBottomRightError('Oops! This user already exists. Try again.');
+                        } else {
+                            this.setState({
+                                message: 'A problem has occured. Try again later.',
+                                statusOk: false
+                            });
+                            this.showBottomRightError('A problem has occured. Try again later.');
                         }
                     }
                 }
@@ -105,6 +115,13 @@ class Profile extends React.Component {
         }
     };
 
+    showBottomRightSuccess() {
+        this.toastBR.show({ severity: 'success', summary: 'Success', detail: 'Changes were succesfully applied!', life: 3000 });
+    }
+
+    showBottomRightError(detail) {
+        this.toastBR.show({ severity: 'error', summary: 'Error', detail: `${detail}`, life: 3000 });
+    }
 
     render() {
         return (
@@ -164,7 +181,7 @@ class Profile extends React.Component {
                             icon={this.state.editMode ? "pi pi-check-square" : "pi pi-user-edit"} iconPos="left" onClick={this.handleClick} />
                     </div>
                 </div>
-
+                <Toast ref={(el) => this.toastBR = el} position="bottom-right" />
             </>
         )
     }
