@@ -1,0 +1,61 @@
+.notification{
+    font-size: 12px;
+    margin: 15px;
+}
+
+svg{
+    width:100%;
+    height: 100vh;
+    
+   
+}
+
+svg #lucky{
+    animation:right;
+    animation-duration:5s;
+    animation-iteration-count:initial;
+    animation-direction:normal;
+    font-weight: bold;
+    font-size: 18pt;
+    font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+    fill:seagreen;
+    
+
+}
+
+svg #nothing {
+    animation: right;
+    animation-duration: 8s;
+    animation-iteration-count: initial;
+    animation-direction: normal;
+    font-weight: bold;
+    font-size: 18pt;
+    font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+    fill:seagreen;
+
+
+
+}
+
+svg #good {
+    animation: right;
+    animation-duration: 11s;
+    animation-iteration-count: initial;
+    animation-direction: normal;
+    font-weight: bold;
+    font-size: 18pt;
+    font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+    fill:seagreen;
+
+
+}
+
+@keyframes right{
+    from{
+        transform:translateX(110%);
+    }
+
+    to{
+        transform:translateX(0%);
+    }
+}

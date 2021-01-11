@@ -1,7 +1,8 @@
 .dataview-demo {
     width: 100%;
     position: absolute; 
-    z-index: 1
+    z-index: 1;
+   
 }
 .dataview-demo .product-name {
     font-size: 1.3rem;
@@ -31,6 +32,7 @@
     align-items: center;
     padding: 1rem 1rem 0.5rem 1rem;
     width: 100%;
+    
 }
 
 .dataview-demo .product-list-item img {
@@ -167,6 +169,7 @@ h1 {
     .dataview-demo .product-list-item .product-list-action {
         display: flex;
         flex-direction: column;
+    
     }
 
     .dataview-demo .product-list-item .product-list-action {

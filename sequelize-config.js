@@ -1,6 +1,6 @@
 const Sequelize = require('sequelize');
 
-const sequelize = new Sequelize(process.env.DB_NAME, process.env.DB_USERNAME, process.env.DB_PASSWORD, {
+const sequelize = new Sequelize('project_webtech', 'root', 'welcome123', {
     dialect: 'mysql',
     define: {
         timestamps: false

@@ -191,6 +191,38 @@ class UserAlimentsContainer extends React.Component {
     renderListItem(data) {
         return (
             <div className="p-col-12">
+                {
+                 data.expirationDate.substring(0,10) > (new Date()).getFullYear() + '-' + (new Date()).getMonth() + 1 + '-' + (new Date()).getDate() && data.status === 'AVAILABLE'?
+
+                <div className="product-list-item" style={{backgroundColor:'#98FB98'}}>
+                    <img src={`images/${data.image}`} onError={(e) => e.target.src = 'https://www.primefaces.org/wp-content/uploads/2020/05/placeholder.png'} alt={data.name} />
+                    <div className="product-list-detail">
+                        <div className="product-name">{data.name}</div>
+                        <div className="product-ingredients">{data.ingredients}</div>
+                        <i className="pi pi-tag product-category-icon"></i><span className="product-category">{data.category}</span>
+                        <div className="product-price">{data.weight}Kg</div>
+                    </div>
+                    <div className="product-list-action">
+                        <span className={`product-badge status-${data.status.toLowerCase()}`}>{data.status}</span>
+                        <Button icon="pi pi-pencil" label="Edit" style={{ marginTop: "30px" }} onClick={() => this.handleEditClick(data)} />
+                    </div>
+                </div>
+                :
+                data.status==='AVAILABLE'?
+                <div className="product-list-item" style={{backgroundColor:'#FA8072'}}>
+                    <img src={`images/${data.image}`} onError={(e) => e.target.src = 'https://www.primefaces.org/wp-content/uploads/2020/05/placeholder.png'} alt={data.name} />
+                    <div className="product-list-detail">
+                        <div className="product-name">{data.name}</div>
+                        <div className="product-ingredients">{data.ingredients}</div>
+                        <i className="pi pi-tag product-category-icon"></i><span className="product-category">{data.category}</span>
+                        <div className="product-price">{data.weight}Kg</div>
+                    </div>
+                    <div className="product-list-action">
+                        <span className={`product-badge status-${data.status.toLowerCase()}`}>{data.status}</span>
+                        <Button icon="pi pi-pencil" label="Edit" style={{ marginTop: "30px" }} onClick={() => this.handleEditClick(data)} />
+                    </div>
+                </div>
+                :
                 <div className="product-list-item">
                     <img src={`images/${data.image}`} onError={(e) => e.target.src = 'https://www.primefaces.org/wp-content/uploads/2020/05/placeholder.png'} alt={data.name} />
                     <div className="product-list-detail">
@@ -204,14 +236,20 @@ class UserAlimentsContainer extends React.Component {
                         <Button icon="pi pi-pencil" label="Edit" style={{ marginTop: "30px" }} onClick={() => this.handleEditClick(data)} />
                     </div>
                 </div>
+
+                }
+                
             </div>
         );
     }
 
 
     render() {
+        
         return (
+          
             <>
+             
                 <div id="background" style={{ backgroundImage: "url(/images/green-leaves.svg)" }}></div>
                 <h1>My aliments</h1>
                 <Menu />
@@ -219,6 +257,7 @@ class UserAlimentsContainer extends React.Component {
                     <div className="card" >
                         <DataView value={this.state.aliments} layout={this.state.layout}
                             itemTemplate={this.itemTemplate} paginator rows={8} />
+                        
                     </div>
                 </div>
                 <Dialog header="Edit aliment" visible={this.state.displayDialog} style={{ width: '50vw' }} onHide={this.onHide}>
@@ -251,8 +290,11 @@ class UserAlimentsContainer extends React.Component {
                     }
                 </Dialog>
                 <Toast ref={(el) => this.toastBR = el} position="bottom-right" />
+                
             </>
-        )
+                
+                )
+                
     }
 }
 

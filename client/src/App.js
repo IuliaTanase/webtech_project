@@ -7,6 +7,7 @@ import AddAliment from "./components/user-profile/AddAliment";
 import Profile from "./components/user-profile/Profile"
 import UserAlimentsContainer from "./components/user-profile/UserAlimentsContainer"
 import UserReservedAlimentsContainer from "./components/user-profile/UserReservedAlimentsContainer"
+import NotificationsContainer from './components/notifications/Notifications'
 
 function App() {
   return (
@@ -19,6 +20,7 @@ function App() {
       <Route exact path="/add-new-aliment" component={AddAliment} />
       <Route exact path="/my-aliments" component={UserAlimentsContainer} />
       <Route exact path="/reserved-aliments" component={UserReservedAlimentsContainer} />
+      <Route exact path="/notifications" component={NotificationsContainer}></Route>
 
     </BrowserRouter>
   );

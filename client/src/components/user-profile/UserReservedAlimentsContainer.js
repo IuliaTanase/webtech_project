@@ -91,22 +91,48 @@ class UserReservedAlimentsContainer extends React.Component {
         return (
             <div className="p-col-12">
                 <div className="product-list-item">
-                    <img src={`images/${data.aliments[0].image}`} onError={(e) => e.target.src = 'https://www.primefaces.org/wp-content/uploads/2020/05/placeholder.png'} alt={data.aliments[0].name} />
-                    <div className="product-list-detail">
-                        <div className="product-name">{data.aliments[0].name.toUpperCase()}</div>
-                        <div className="prod-category">
-                            <i className="pi pi-tag product-category-icon"></i>
-                            <span className="product-category">{data.aliments[0].category}</span>
+                    {
+                      data.aliments[0].expirationDate.substring(0,10) > (new Date()).getFullYear() + '-' + (new Date()).getMonth() + 1 + '-' + (new Date()).getDate() ?
+                      <>
+                        <img src={`images/${data.aliments[0].image}`} onError={(e) => e.target.src = 'https://www.primefaces.org/wp-content/uploads/2020/05/placeholder.png'} alt={data.aliments[0].name} />
+                        <div className="product-list-detail" style={{backgroundColor:'#98FB98'}}>
+                            <div className="product-name">{data.aliments[0].name.toUpperCase()}</div>
+                            <div className="prod-category">
+                                <i className="pi pi-tag product-category-icon"></i>
+                                <span className="product-category">{data.aliments[0].category}</span>
+                            </div>
+                            <div className="prod-expDate">
+                                <i className="pi pi-calendar"></i>
+                                <span className="product-expirationDate">{`${data.aliments[0].expirationDate.substring(0, 10)} --> ${data.aliments[0].expirationDate.substring(11, 19)}`}</span>
+                            </div>
                         </div>
-                        <div className="prod-expDate">
-                            <i className="pi pi-calendar"></i>
-                            <span className="product-expirationDate">{`${data.aliments[0].expirationDate.substring(0, 10)} --> ${data.aliments[0].expirationDate.substring(11, 19)}`}</span>
+                        <div className="product-list-action">
+                            <i className="pi pi-clock product-category-icon"></i>
+                            <div className="product-name">{`${data.date.substring(0, 10)} --> ${data.date.substring(11, 19)}`}</div>
                         </div>
-                    </div>
-                    <div className="product-list-action">
-                        <i className="pi pi-clock product-category-icon"></i>
-                        <div className="product-name">{`${data.date.substring(0, 10)} --> ${data.date.substring(11, 19)}`}</div>
-                    </div>
+                      </>
+                      :
+                      <>
+                        <img src={`images/${data.aliments[0].image}`} onError={(e) => e.target.src = 'https://www.primefaces.org/wp-content/uploads/2020/05/placeholder.png'} alt={data.aliments[0].name} />
+                        <div className="product-list-detail" style={{backgroundColor:'#FA8072'}}>
+                            <div className="product-name">{data.aliments[0].name.toUpperCase()}</div>
+                            <div className="prod-category">
+                                <i className="pi pi-tag product-category-icon"></i>
+                                <span className="product-category">{data.aliments[0].category}</span>
+                            </div>
+                            <div className="prod-expDate">
+                                <i className="pi pi-calendar"></i>
+                                <span className="product-expirationDate">{`${data.aliments[0].expirationDate.substring(0, 10)} --> ${data.aliments[0].expirationDate.substring(11, 19)}`}</span>
+                            </div>
+                        </div>
+                        <div className="product-list-action">
+                            <i className="pi pi-clock product-category-icon"></i>
+                            <div className="product-name">{`${data.date.substring(0, 10)} --> ${data.date.substring(11, 19)}`}</div>
+                        </div>
+                      </>
+
+                    }
+                    
                 </div>
             </div>
         );
@@ -119,8 +145,8 @@ class UserReservedAlimentsContainer extends React.Component {
                 <div id="background" style={{ backgroundImage: "url(/images/green-leaves.svg)" }}></div>
                 <h1>My reservations</h1>
                 <Menu />
-                <div className="dataview-demo" >
-                    <div className="card" >
+                <div className="dataview-demo">
+                    <div className="card">
                         <DataView value={this.state.reservations} layout={this.state.layout}
                             itemTemplate={this.itemTemplate} paginator rows={8} />
                     </div>

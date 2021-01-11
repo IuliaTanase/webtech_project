@@ -84,7 +84,8 @@ class Menu extends React.Component {
             },
             {
                 label: 'Notifications',
-                icon: 'pi pi-fw pi-bell'
+                icon: 'pi pi-fw pi-bell',
+                url:'http://localhost:3000/notifications'
             },
             {
                 label: 'Log out',

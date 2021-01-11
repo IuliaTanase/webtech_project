@@ -6,6 +6,7 @@ import Menu from "../menubar/Menu";
 import { Toast } from 'primereact/toast';
 
 
+
 class AlimentsContainer extends React.Component {
     constructor() {
         super();
@@ -131,22 +132,67 @@ class AlimentsContainer extends React.Component {
         return (
             <>
                 <div className="p-col-12 p-lg-3 p-sm-6">
-                    <div className="product-grid-item card">
+                    <div className="product-grid-item card" >
                         <div className="product-grid-item-top">
                             <div>
                                 <i className="pi pi-tag product-category-icon"></i>
                                 <span className="product-category">{data.category ? data.category.toUpperCase() : "-"}</span>
                             </div>
-                            <span className={`product-badge status-${data.status.toLowerCase()}`}>{data.status}</span>
+                            <span  className={`product-badge status-${data.status.toLowerCase()}`}>{data.status}</span>
                         </div>
-                        <div className="product-grid-item-content">
-                            <img src={`images/${data.image}`} onError={(e) => e.target.src = 'https://www.primefaces.org/wp-content/uploads/2020/05/placeholder.png'} alt={data.name} />
-                            <div className="product-name">{data.name}</div>
-                            <div className="product-ingredients">{data.ingredients}</div>
-                            <div className="product-expirationDate">
-                                <i className="pi pi-calendar product-category-icon"></i>{data.expirationDate.substring(0, 10) + "--->" + data.expirationDate.substring(11, 19)}
+                       
+                        
+                            {
+                             
+                              data.expirationDate.substring(0,10) > (new Date()).getFullYear() + '-' + (new Date()).getMonth() + 1 + '-' + (new Date()).getDate() && data.status==='AVAILABLE' ?
+                             
+                            <div style={{backgroundColor:"#98FB98"}} className="product-grid-item-content">
+                            
+                               <img src={`images/${data.image}`} onError={(e) => e.target.src = 'https://www.primefaces.org/wp-content/uploads/2020/05/placeholder.png'} alt={data.name} />
+                               <div className="product-name">{data.name}</div>
+                               <div className="product-ingredients">{data.ingredients}</div>
+                               <div className="product-expirationDate">
+                                  <i className="pi pi-calendar product-category-icon"></i>{data.expirationDate.substring(0, 10) + "--->" + data.expirationDate.substring(11, 19)}
+                               </div>
+                            
                             </div>
-                        </div>
+                           
+                           :
+                           data.status==='AVAILABLE' ?
+                           <>
+                           
+                           <div style={{backgroundColor:"#FA8072"}} className="product-grid-item-content">
+                            
+                               <img src={`images/${data.image}`} onError={(e) => e.target.src = 'https://www.primefaces.org/wp-content/uploads/2020/05/placeholder.png'} alt={data.name} />
+                               <div className="product-name">{data.name}</div>
+                               <div className="product-ingredients">{data.ingredients}</div>
+                               <div className="product-expirationDate">
+                                  <i className="pi pi-calendar product-category-icon"></i>{data.expirationDate.substring(0, 10) + "--->" + data.expirationDate.substring(11, 19)}
+                               </div>
+                            
+                            </div>
+                           </>
+                           :
+                           <>
+                           <div className="product-grid-item-content">
+                            
+                               <img src={`images/${data.image}`} onError={(e) => e.target.src = 'https://www.primefaces.org/wp-content/uploads/2020/05/placeholder.png'} alt={data.name} />
+                               <div className="product-name">{data.name}</div>
+                               <div className="product-ingredients">{data.ingredients}</div>
+                               <div className="product-expirationDate">
+                                  <i className="pi pi-calendar product-category-icon"></i>{data.expirationDate.substring(0, 10) + "--->" + data.expirationDate.substring(11, 19)}
+                               </div>
+                            
+                            </div>
+                           </>
+                           
+                            }
+                            
+                            
+                           
+                
+            
+                        
                         <div className="product-grid-item-bottom">
                             <div>
                                 <i className="pi pi-th-large product-category-icon"></i>
@@ -156,13 +202,16 @@ class AlimentsContainer extends React.Component {
                         </div>
                     </div>
                 </div>
+                
             </>
         );
     }
 
     render() {
+    
         return (
             <>
+            
                 <div id="background" style={{ backgroundImage: "url(/images/green-leaves.svg)" }}></div>
                 <h1>Aliments</h1>
                 <Menu />
