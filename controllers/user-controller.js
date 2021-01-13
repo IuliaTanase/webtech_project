@@ -1,5 +1,5 @@
 
-const { User, Aliment, Reservation } = require("../sequelize-config");
+const { User, Aliment, Reservation, Friend } = require("../sequelize-config");
 const Sequelize = require('sequelize');
 const Op = Sequelize.Op;
 
@@ -45,7 +45,7 @@ const getUser = async (req, res) => {
             res.status(400).json({ message: 'User ID should be a number' });
         } else {
             const foundUser = await User.findByPk(userId, {
-                include: [Reservation, Aliment]
+                include: [Reservation, Aliment, Friend]
             });
             if (foundUser) {
                 res.status(200).json(foundUser);
@@ -62,7 +62,6 @@ const updateUser = async (req, res) => {
     try {
         const userId = parseInt(req.params.id);
         if (isNaN(userId)) {
-
             res.status(400).json({ message: 'User ID should be a number' });
         } else {
             const foundUser = await User.findByPk(userId);

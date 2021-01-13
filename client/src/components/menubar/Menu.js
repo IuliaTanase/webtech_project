@@ -75,17 +75,19 @@ class Menu extends React.Component {
                     {
                         label: 'Add a new friend',
                         icon: 'pi pi-fw pi-plus',
+                        url: 'http://localhost:3000/add-friend'
                     },
                     {
                         label: 'See all friends',
                         icon: 'pi pi-fw pi-chevron-circle-right',
+                        url: 'http://localhost:3000/friends'
                     }
                 ]
             },
             {
                 label: 'Notifications',
                 icon: 'pi pi-fw pi-bell',
-                url:'http://localhost:3000/notifications'
+                url: 'http://localhost:3000/notifications'
             },
             {
                 label: 'Log out',

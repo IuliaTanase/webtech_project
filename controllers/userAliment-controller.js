@@ -48,7 +48,7 @@ const getUserAliment = async (req, res) => {
         } else {
             const user = await User.findByPk(userId);
             if (user) {
-                const aliments = await user.getAliments({ id: req.params.aid });
+                const aliments = await user.getAliments({ where: { id: req.params.aid } });
                 const aliment = aliments.shift();
                 if (aliment) {
                     res.status(200).json(aliment);
@@ -105,8 +105,9 @@ const deleteUserAliment = async (req, res) => {
         } else {
             const user = await User.findByPk(userId);
             if (user) {
-                const aliments = await user.getAliments({ id: req.params.aid });
+                const aliments = await user.getAliments({ where: { id: req.params.aid } });
                 const aliment = aliments.shift();
+                console.log("aliment", aliment)
                 if (aliment) {
                     await aliment.destroy();
                     res.status(204).json({ message: 'No content' });

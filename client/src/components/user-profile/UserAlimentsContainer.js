@@ -16,6 +16,7 @@ class UserAlimentsContainer extends React.Component {
         this.state = {
             aliments: [],
             layout: 'list',
+            displayConfirmation: false,
             message: '',
             statusOk: true,
             displayDialog: false,
@@ -71,7 +72,6 @@ class UserAlimentsContainer extends React.Component {
         }
 
         this.handleEditClick = (data) => {
-
             this.setState({
                 selectedItem: data,
                 displayDialog: true,
@@ -82,9 +82,39 @@ class UserAlimentsContainer extends React.Component {
             });
         }
 
+        this.showDeleteDialog = (data) => {
+            this.setState({
+                displayConfirmation: true,
+                selectedItem: data
+            })
+        }
+
+        this.handleDeleteAliment = async (selectedAliment) => {
+            const userId = JSON.parse(localStorage.getItem("user")).id;
+            const alimentId = this.state.selectedItem.id;
+
+            const response = await fetch(`${SERVER}/${userId}/aliments/${alimentId}`, {
+                method: 'DELETE',
+            });
+
+            if (response.status === 204) {
+                const alimentsAfterDelete = this.state.aliments;
+                const foundIndex = alimentsAfterDelete.findIndex(aliment => aliment.id === alimentId);
+                if (foundIndex !== -1) {
+                    alimentsAfterDelete.splice(foundIndex, 1);
+                    this.setState({
+                        aliments: alimentsAfterDelete
+                    });
+                    this.onHide();
+                    this.showBottomRightSuccess("Aliment was successfully deleted!");
+                }
+            }
+        }
+
         this.onHide = () => {
             this.setState({
-                displayDialog: false
+                displayDialog: false,
+                displayConfirmation: false
             });
         }
 
@@ -110,8 +140,8 @@ class UserAlimentsContainer extends React.Component {
                     if (foundIndex !== -1) {
                         newAliments[foundIndex] = updatedAliment;
                         newAliments = this.setAlimentImage(newAliments);
-                        this.setState({ aliments: newAliments });
-                        this.showBottomRightSuccess();
+                        this.setState({ aliments: newAliments, selectedItem: null });
+                        this.showBottomRightSuccess("Aliment was successfully modified!");
                         this.onHide();
                     }
                 } else {
@@ -180,49 +210,32 @@ class UserAlimentsContainer extends React.Component {
         return this.renderListItem(aliment);
     }
 
-    showBottomRightSuccess() {
-        this.toastBR.show({ severity: 'success', summary: 'Success', detail: 'Aliment was successfully modified!', life: 3000 });
+    showBottomRightSuccess(detail) {
+        this.toastBR.show({ severity: 'success', summary: 'Success', detail: `${detail}`, life: 3000 });
     }
 
     showBottomRightError(detail) {
         this.toastBR.show({ severity: 'error', summary: 'Error', detail: `${detail}`, life: 3000 });
     }
 
+    setItemBackgroundColor(data) {
+        let background = "";
+
+        if (data.expirationDate.substring(0, 10) > (new Date()).getFullYear() + '-' + (new Date()).getMonth() + 1 + '-' + (new Date()).getDate() && data.status === 'AVAILABLE') {
+            background = '#98FB98';
+        } else {
+            if (data.status === 'AVAILABLE') {
+                background = '#FAB8072';
+            } else {
+                background = 'ebebeb';
+            }
+        }
+        return background;
+    }
+
     renderListItem(data) {
         return (
-            <div className="p-col-12">
-                {
-                 data.expirationDate.substring(0,10) > (new Date()).getFullYear() + '-' + (new Date()).getMonth() + 1 + '-' + (new Date()).getDate() && data.status === 'AVAILABLE'?
-
-                <div className="product-list-item" style={{backgroundColor:'#98FB98'}}>
-                    <img src={`images/${data.image}`} onError={(e) => e.target.src = 'https://www.primefaces.org/wp-content/uploads/2020/05/placeholder.png'} alt={data.name} />
-                    <div className="product-list-detail">
-                        <div className="product-name">{data.name}</div>
-                        <div className="product-ingredients">{data.ingredients}</div>
-                        <i className="pi pi-tag product-category-icon"></i><span className="product-category">{data.category}</span>
-                        <div className="product-price">{data.weight}Kg</div>
-                    </div>
-                    <div className="product-list-action">
-                        <span className={`product-badge status-${data.status.toLowerCase()}`}>{data.status}</span>
-                        <Button icon="pi pi-pencil" label="Edit" style={{ marginTop: "30px" }} onClick={() => this.handleEditClick(data)} />
-                    </div>
-                </div>
-                :
-                data.status==='AVAILABLE'?
-                <div className="product-list-item" style={{backgroundColor:'#FA8072'}}>
-                    <img src={`images/${data.image}`} onError={(e) => e.target.src = 'https://www.primefaces.org/wp-content/uploads/2020/05/placeholder.png'} alt={data.name} />
-                    <div className="product-list-detail">
-                        <div className="product-name">{data.name}</div>
-                        <div className="product-ingredients">{data.ingredients}</div>
-                        <i className="pi pi-tag product-category-icon"></i><span className="product-category">{data.category}</span>
-                        <div className="product-price">{data.weight}Kg</div>
-                    </div>
-                    <div className="product-list-action">
-                        <span className={`product-badge status-${data.status.toLowerCase()}`}>{data.status}</span>
-                        <Button icon="pi pi-pencil" label="Edit" style={{ marginTop: "30px" }} onClick={() => this.handleEditClick(data)} />
-                    </div>
-                </div>
-                :
+            <div className="p-col-12" style={{ backgroundColor: this.setItemBackgroundColor(data) }}>
                 <div className="product-list-item">
                     <img src={`images/${data.image}`} onError={(e) => e.target.src = 'https://www.primefaces.org/wp-content/uploads/2020/05/placeholder.png'} alt={data.name} />
                     <div className="product-list-detail">
@@ -234,22 +247,25 @@ class UserAlimentsContainer extends React.Component {
                     <div className="product-list-action">
                         <span className={`product-badge status-${data.status.toLowerCase()}`}>{data.status}</span>
                         <Button icon="pi pi-pencil" label="Edit" style={{ marginTop: "30px" }} onClick={() => this.handleEditClick(data)} />
+                        <Button icon="pi pi-trash" label="Delete" style={{ marginTop: "10px", backgroundColor: "#9c0e02" }} onClick={() => this.showDeleteDialog(data)} />
                     </div>
                 </div>
-
-                }
-                
             </div>
         );
     }
 
+    renderFooter() {
+        return (
+            <div>
+                <Button label="No" icon="pi pi-times" onClick={() => this.onHide()} className="p-button-text" />
+                <Button label="Yes" icon="pi pi-check" onClick={() => this.handleDeleteAliment(this.state.selectedItem)} autoFocus />
+            </div>
+        );
+    }
 
     render() {
-        
         return (
-          
             <>
-             
                 <div id="background" style={{ backgroundImage: "url(/images/green-leaves.svg)" }}></div>
                 <h1>My aliments</h1>
                 <Menu />
@@ -257,7 +273,7 @@ class UserAlimentsContainer extends React.Component {
                     <div className="card" >
                         <DataView value={this.state.aliments} layout={this.state.layout}
                             itemTemplate={this.itemTemplate} paginator rows={8} />
-                        
+
                     </div>
                 </div>
                 <Dialog header="Edit aliment" visible={this.state.displayDialog} style={{ width: '50vw' }} onHide={this.onHide}>
@@ -289,12 +305,18 @@ class UserAlimentsContainer extends React.Component {
                         </>
                     }
                 </Dialog>
+                <Dialog header="Delete aliment" visible={this.state.displayConfirmation} modal style={{ width: '350px' }}
+                    footer={this.renderFooter()} onHide={() => this.onHide()}>
+                    <div className="confirmation-content">
+                        <i className="pi pi-exclamation-triangle p-mr-3" style={{ fontSize: '2rem' }} />
+                        <span>Are you sure you want to delete this aliment?</span>
+                    </div>
+                </Dialog>
                 <Toast ref={(el) => this.toastBR = el} position="bottom-right" />
-                
+
             </>
-                
-                )
-                
+        )
+
     }
 }
 

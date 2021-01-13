@@ -22,6 +22,7 @@ const getReservations = async (req, res) => {
 }
 
 const getReservation = async (req, res) => {
+    console.log("id: ", req.params.rid)
     try {
         const userId = parseInt(req.params.uid);
         if (isNaN(userId)) {
@@ -29,7 +30,7 @@ const getReservation = async (req, res) => {
         } else {
             const user = await User.findByPk(userId);
             if (user) {
-                const reservations = await user.getReservations({ id: req.params.rid });
+                const reservations = await user.getReservations({ where: { id: req.params.rid } });
                 const reservation = reservations.shift();
                 if (reservation) {
                     res.status(200).json(reservation);
@@ -84,7 +85,7 @@ const deleteReservation = async (req, res) => {
         } else {
             const user = await User.findByPk(userId);
             if (user) {
-                const reservations = await user.getReservations({ id: req.params.rid });
+                const reservations = await user.getReservations({ where: { id: req.params.rid } });
                 const reservation = reservations.shift();
                 if (reservation) {
                     const aliments = await Aliment.findAll({

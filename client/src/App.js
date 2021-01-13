@@ -8,6 +8,8 @@ import Profile from "./components/user-profile/Profile"
 import UserAlimentsContainer from "./components/user-profile/UserAlimentsContainer"
 import UserReservedAlimentsContainer from "./components/user-profile/UserReservedAlimentsContainer"
 import NotificationsContainer from './components/notifications/Notifications'
+import AddFriend from './components/friends/AddFriend'
+import FriendsContainer from './components/friends/FriendsContainer'
 
 function App() {
   return (
@@ -20,7 +22,9 @@ function App() {
       <Route exact path="/add-new-aliment" component={AddAliment} />
       <Route exact path="/my-aliments" component={UserAlimentsContainer} />
       <Route exact path="/reserved-aliments" component={UserReservedAlimentsContainer} />
-      <Route exact path="/notifications" component={NotificationsContainer}></Route>
+      <Route exact path="/notifications" component={NotificationsContainer} />
+      <Route exact path="/add-friend" component={AddFriend} />
+      <Route exact path="/friends" component={FriendsContainer} />
 
     </BrowserRouter>
   );

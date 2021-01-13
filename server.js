@@ -10,6 +10,7 @@ const userAlimentsRouter = require('./routers/userAliments-router');
 const alimentRouter = require('./routers/aliment-router');
 const reservationRouter = require('./routers/reservation-router');
 const loginRouter = require('./routers/loginUser-router');
+const friendRouter = require('./routers/friend-router');
 
 const app = express();
 app.use(cors());
@@ -31,6 +32,7 @@ app.use('/api/users', userAlimentsRouter);
 app.use('/api/aliments', alimentRouter);
 app.use('/api/users', reservationRouter);
 app.use('/api/users', loginRouter);
+app.use('/api/users', friendRouter);
 
 app.use((error, req, res, next) => {
     console.warn(error);

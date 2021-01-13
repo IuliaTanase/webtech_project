@@ -87,52 +87,38 @@ class UserReservedAlimentsContainer extends React.Component {
         return this.renderListItem(reservation);
     }
 
+    setItemBackgroundColor(data) {
+        let background = "";
+
+        if (data.expirationDate.substring(0, 10) > (new Date()).getFullYear() + '-' + (new Date()).getMonth() + 1 + '-' + (new Date()).getDate()) {
+            background = '#98FB98';
+        } else {
+            background = '#FA8072';
+        }
+
+        return background;
+    }
+
     renderListItem(data) {
         return (
-            <div className="p-col-12">
+            <div className="p-col-12" style={{ backgroundColor: this.setItemBackgroundColor(data.aliments[0]) }}>
                 <div className="product-list-item">
-                    {
-                      data.aliments[0].expirationDate.substring(0,10) > (new Date()).getFullYear() + '-' + (new Date()).getMonth() + 1 + '-' + (new Date()).getDate() ?
-                      <>
-                        <img src={`images/${data.aliments[0].image}`} onError={(e) => e.target.src = 'https://www.primefaces.org/wp-content/uploads/2020/05/placeholder.png'} alt={data.aliments[0].name} />
-                        <div className="product-list-detail" style={{backgroundColor:'#98FB98'}}>
-                            <div className="product-name">{data.aliments[0].name.toUpperCase()}</div>
-                            <div className="prod-category">
-                                <i className="pi pi-tag product-category-icon"></i>
-                                <span className="product-category">{data.aliments[0].category}</span>
-                            </div>
-                            <div className="prod-expDate">
-                                <i className="pi pi-calendar"></i>
-                                <span className="product-expirationDate">{`${data.aliments[0].expirationDate.substring(0, 10)} --> ${data.aliments[0].expirationDate.substring(11, 19)}`}</span>
-                            </div>
+                    <img src={`images/${data.aliments[0].image}`} onError={(e) => e.target.src = 'https://www.primefaces.org/wp-content/uploads/2020/05/placeholder.png'} alt={data.aliments[0].name} />
+                    <div className="product-list-detail" >
+                        <div className="product-name">{data.aliments[0].name.toUpperCase()}</div>
+                        <div className="prod-category">
+                            <i className="pi pi-tag product-category-icon"></i>
+                            <span className="product-category">{data.aliments[0].category}</span>
                         </div>
-                        <div className="product-list-action">
-                            <i className="pi pi-clock product-category-icon"></i>
-                            <div className="product-name">{`${data.date.substring(0, 10)} --> ${data.date.substring(11, 19)}`}</div>
+                        <div className="prod-expDate">
+                            <i className="pi pi-calendar"></i>
+                            <span className="product-expirationDate">{`${data.aliments[0].expirationDate.substring(0, 10)} --> ${data.aliments[0].expirationDate.substring(11, 19)}`}</span>
                         </div>
-                      </>
-                      :
-                      <>
-                        <img src={`images/${data.aliments[0].image}`} onError={(e) => e.target.src = 'https://www.primefaces.org/wp-content/uploads/2020/05/placeholder.png'} alt={data.aliments[0].name} />
-                        <div className="product-list-detail" style={{backgroundColor:'#FA8072'}}>
-                            <div className="product-name">{data.aliments[0].name.toUpperCase()}</div>
-                            <div className="prod-category">
-                                <i className="pi pi-tag product-category-icon"></i>
-                                <span className="product-category">{data.aliments[0].category}</span>
-                            </div>
-                            <div className="prod-expDate">
-                                <i className="pi pi-calendar"></i>
-                                <span className="product-expirationDate">{`${data.aliments[0].expirationDate.substring(0, 10)} --> ${data.aliments[0].expirationDate.substring(11, 19)}`}</span>
-                            </div>
-                        </div>
-                        <div className="product-list-action">
-                            <i className="pi pi-clock product-category-icon"></i>
-                            <div className="product-name">{`${data.date.substring(0, 10)} --> ${data.date.substring(11, 19)}`}</div>
-                        </div>
-                      </>
-
-                    }
-                    
+                    </div>
+                    <div className="product-list-action">
+                        <i className="pi pi-clock product-category-icon"></i>
+                        <div className="product-name">{`${data.date.substring(0, 10)} --> ${data.date.substring(11, 19)}`}</div>
+                    </div>
                 </div>
             </div>
         );

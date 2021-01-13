@@ -5,49 +5,42 @@ import { Message } from 'primereact/message';
 import { DataView } from 'primereact/dataview';
 
 
+class Notifications extends React.Component {
 
-class Notifications extends React.Component{
+    constructor(props) {
+        super(props);
 
-    
-    constructor(props){
-        super(props)
-
-
-        this.state={
-            aliments:[],
+        this.state = {
+            aliments: [],
             layout: 'list',
         }
 
         this.itemTemplate = this.itemTemplate.bind(this);
 
-        this.daysUntil = (data) =>{
-            
-            let yearNow = parseInt((new Date()).getFullYear())
-            let monthNow = parseInt((new Date()).getMonth() + 1)
-            let dayNow = parseInt((new Date()).getDate())
+        this.daysUntil = (data) => {
 
-        
-            if(yearNow == data.substring(0,4)){
-               
-                if(monthNow == data.substring(5,7)){
-                  
-                  return data.substring(8,10) - dayNow
+            let yearNow = parseInt((new Date()).getFullYear());
+            let monthNow = parseInt((new Date()).getMonth() + 1);
+            let dayNow = parseInt((new Date()).getDate());
+
+            if (yearNow === data.substring(0, 4)) {
+                if (monthNow === data.substring(5, 7)) {
+                    return data.substring(8, 10) - dayNow;
                 }
             }
-            return 5
-
+            return 5;
         }
 
-        this.existingExpired = ()=>{
-            let numberOfExpiredAliments = 0
-            for(let aliment of this.state.aliments){
-                if(aliment.expirationDate.substring(0,10) < (new Date()).getFullYear() + '-' + (new Date()).getMonth() + 1 + '-' + (new Date()).getDate() && aliment.status == 'AVAILABLE'){
-                    numberOfExpiredAliments += 1
+        this.existingExpired = () => {
+            let numberOfExpiredAliments = 0;
+            for (let aliment of this.state.aliments) {
+                if (aliment.expirationDate.substring(0, 10) < (new Date()).getFullYear() + '-' + (new Date()).getMonth() + 1 + '-' + (new Date()).getDate() && aliment.status == 'AVAILABLE') {
+                    numberOfExpiredAliments += 1;
                 }
 
             }
-            console.log(numberOfExpiredAliments)
-            return numberOfExpiredAliments
+            console.log(numberOfExpiredAliments);
+            return numberOfExpiredAliments;
         }
 
     }
@@ -75,79 +68,66 @@ class Notifications extends React.Component{
         return this.renderListItem(aliment);
     }
 
-
-    renderListItem(data){
-        return(
+    renderListItem(data) {
+        return (
             <>
-            {
-                
-                    
-                 data.status === 'AVAILABLE'?
-                 
-                  <div className="p-col-12">
                 {
-                   data.expirationDate.substring(0,10) < (new Date()).getFullYear() + '-' + (new Date()).getMonth() + 1 + '-' + (new Date()).getDate() ?
-                    <div className='notification'>
-                         <Message className='msg' severity='error' text={'Aliment ' + data.name + ' expired on ' + data.expirationDate.substring(0,10)}></Message>
-                    </div> 
-                    :
-                    <>
-                    {
-                        this.daysUntil(data.expirationDate) < 5 ?
-                        <div className='notification'>
-                           
-                            <Message severity='warn' text={'Aliment ' + data.name + ' is going to expire in ' + this.daysUntil(data.expirationDate) + 'days'} ></Message>
+                    data.status === 'AVAILABLE' ?
+
+                        <div className="p-col-12">
+                            {
+                                data.expirationDate.substring(0, 10) < (new Date()).getFullYear() + '-' + (new Date()).getMonth() + 1 + '-' + (new Date()).getDate() ?
+                                    <div className='notification'>
+                                        <Message className='msg' severity='error' text={'Aliment ' + data.name + ' expired on ' + data.expirationDate.substring(0, 10)} />
+                                    </div>
+                                    :
+                                    <> {
+                                        this.daysUntil(data.expirationDate) < 5 ?
+                                            <div className='notification'>
+                                                <Message severity='warn' text={'Aliment ' + data.name + ' is going to expire in ' + this.daysUntil(data.expirationDate) + 'days'} />
+                                            </div>
+                                            :
+                                            <>
+                                            </>
+                                    }
+                                    </>
+                            }
                         </div>
                         :
                         <>
                         </>
-                    }
-                    </>
-                  
-                   
-                    
                 }
-                </div>
-            
-                :
-                <>
-            
-                </>
-                
-            }
-              </>  
-                
-           
+            </>
         )
     }
 
-    render(){
-        return(
+    render() {
+        return (
             <div>
-            <div id="background" style={{ backgroundImage: "url(/images/green-leaves.svg)" }}></div>
-            <h1>Notifications</h1>
-            <Menu></Menu>
-            <div className="dataview-demo">
-            <div className="card" >
-                {
-                    this.existingExpired() != 0 ?
-                        <DataView value={this.state.aliments} layout={this.state.layout}
-                            itemTemplate={this.itemTemplate} paginator rows={8} />
-                    :
-                    <div>
-                        <svg>
-                            <text id='lucky' x='500' y='100'>You are lucky!</text>
-                            <text id='nothing' x='600' y='140'>There's no notification here.</text>
-                            <text id='good' x='500' y='180'>All aliments are good to eat.</text>
-                        </svg>
+                <div id="background" style={{ backgroundImage: "url(/images/green-leaves.svg)" }}></div>
+                <h1>Notifications</h1>
+                <Menu />
+                <div className="dataview-demo">
+                    <div className="card" >
+                        {
+                            this.existingExpired() !== 0 ?
+                                <DataView value={this.state.aliments} layout={this.state.layout}
+                                    itemTemplate={this.itemTemplate} paginator rows={8} />
+                                :
+                                <div>
+                                    <svg>
+                                        <text id='lucky' x='500' y='100'>You are lucky!</text>
+                                        <text id='nothing' x='600' y='140'>There's no notification here.</text>
+                                        <text id='good' x='500' y='180'>All aliments are good to eat.</text>
+                                    </svg>
+                                </div>
+                        }
+
                     </div>
-                }
-                        
-                    </div>
+                </div>
+
             </div>
-        
-            </div>
-            
+
         )
     }
 }
