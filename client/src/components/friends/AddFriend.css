@@ -1,0 +1,8 @@
+.form-select{
+    border: 3px solid rgb(60, 179, 113);
+}
+
+.form-select:focus{
+    border-color: rgba(60, 179, 113,0.7);
+    box-shadow: 0 0 0 0.5rem  rgba(60, 179, 113,0.3);
+}

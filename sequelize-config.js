@@ -25,9 +25,9 @@ Friend.belongsTo(User);
 Reservation.hasMany(Aliment);
 Aliment.belongsTo(Reservation);
 
-// sequelize.sync(
-//     { force: true }
-// );
+sequelize.sync(
+    { force: true }
+);
 
 module.exports = {
     User,

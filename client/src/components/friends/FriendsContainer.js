@@ -46,6 +46,7 @@ class FriendsContainer extends React.Component {
                             <i className="pi pi-envelope product-category-icon"></i><span className="product-category">{data.email}</span>
                         </div>
                         <div className="product-weight"> <i className="pi pi-user product-category-icon"></i> {data.userName}</div>
+                        <div className="product-weight"> <i className="pi pi-tag"></i> {data.tag}</div>
                     </div>
                 </div>
 

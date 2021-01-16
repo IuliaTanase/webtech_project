@@ -3,7 +3,6 @@ module.exports = (sequelize, DataTypes) => {
         userName: {
             type: DataTypes.STRING,
             allowNull: false,
-            unique: true,
             validate: {
                 notEmpty: true,
                 notNull: {
@@ -22,7 +21,6 @@ module.exports = (sequelize, DataTypes) => {
         email: {
             type: DataTypes.STRING,
             allowNull: false,
-            unique: true,
             validate: {
                 notEmpty: true,
                 notNull: {
@@ -31,6 +29,19 @@ module.exports = (sequelize, DataTypes) => {
                 isEmail: true,
                 len: [10, 50]
             }
+        },
+        tag:{
+            type:DataTypes.STRING,
+            allowNull:false,
+            validate:{
+                notEmpty:true,
+                notNull: {
+                    message: 'Please enter the tag'
+                },
+                len:[3,50]
+            }
+
         }
+
     });
 }

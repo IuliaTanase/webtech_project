@@ -182,6 +182,22 @@ class UserAlimentsContainer extends React.Component {
                 }
             }
         }
+        this.daysUntil = (data) => {
+
+            console.log(data)
+            let yearNow = parseInt((new Date()).getFullYear());
+            let monthNow = parseInt((new Date()).getMonth() + 1);
+            let dayNow = parseInt((new Date()).getDate());
+
+            
+            if (yearNow == data.substring(0, 4)) {
+                if (monthNow == data.substring(5, 7)) {
+                    
+                    return data.substring(8, 10) - dayNow;
+                }
+            }
+            return 5;
+        }
 
     }
 
@@ -221,11 +237,18 @@ class UserAlimentsContainer extends React.Component {
     setItemBackgroundColor(data) {
         let background = "";
 
-        if (data.expirationDate.substring(0, 10) > (new Date()).getFullYear() + '-' + (new Date()).getMonth() + 1 + '-' + (new Date()).getDate() && data.status === 'AVAILABLE') {
+        if (this.daysUntil(data.expirationDate) > 3 && data.status === 'AVAILABLE') {
             background = '#98FB98';
+
         } else {
-            if (data.status === 'AVAILABLE') {
-                background = '#FAB8072';
+            if (data.status == 'AVAILABLE') {
+                if(this.daysUntil(data.expirationDate) <= 0){
+
+                    background = '#FA8072';
+                }else if (this.daysUntil(data.expirationDate) <=3){
+                    background = '#F0E68C';
+                }
+                
             } else {
                 background = 'ebebeb';
             }

@@ -3,7 +3,11 @@ import { DataView } from 'primereact/dataview';
 import { Button } from 'primereact/button';
 import Menu from "../menubar/Menu";
 import { Toast } from 'primereact/toast';
-import '../aliments/Aliments.css'
+import '../aliments/Aliments.css';
+import '../bootstrap.css'
+import './AddFriend.css'
+
+
 
 
 class AddFriend extends React.Component {
@@ -15,12 +19,19 @@ class AddFriend extends React.Component {
             friends: [],
             layout: 'list',
             toastBR: '',
-            alreadyAdded: false
+            alreadyAdded: false,
+            tag:'No tag'
         }
 
         this.itemTemplate = this.itemTemplate.bind(this);
 
+    
+
         this.handleAddClick = async (user) => {
+            
+            const select = document.getElementById(user.name)
+            console.log(select.options[select.selectedIndex].text)
+
             const SERVER = `http://localhost:8080/api/users`;
             const currentUserId = JSON.parse(localStorage.getItem("user")).id;
 
@@ -39,7 +50,8 @@ class AddFriend extends React.Component {
                     body: JSON.stringify({
                         userName: user.userName,
                         name: user.name,
-                        email: user.email
+                        email: user.email,
+                        tag: select.options[select.selectedIndex].text
                     })
                 });
                 if (postResponse.ok) {
@@ -54,9 +66,11 @@ class AddFriend extends React.Component {
 
             }
 
-        }
 
+}
     }
+
+   
 
 
     async componentDidMount() {
@@ -104,10 +118,11 @@ class AddFriend extends React.Component {
 
     renderListItem(data) {
         return (
-            <div className="p-col-12">
+            <div>
+                <div className="p-col-12">
                 <div className="product-list-item">
                     <img src={`images/unknown-user.png`} onError={(e) => e.target.src = 'https://www.primefaces.org/wp-content/uploads/2020/05/placeholder.png'} alt={data.name} />
-                    <div className="product-list-detail">
+                    <div className="product-list-detail" style={{width:"70vw"}}>
                         <div className="product-name">{data.name}</div>
                         <div style={{ marginTop: "15px" }}>
                             <i className="pi pi-envelope product-category-icon"></i><span className="product-category">{data.email}</span>
@@ -115,11 +130,24 @@ class AddFriend extends React.Component {
                         <div className="product-weight"> <i className="pi pi-user product-category-icon"></i> {data.userName}</div>
                     </div>
                     <div className="users-list-action">
-                        <Button icon="pi pi-plus" label="Add friend" style={{ marginTop: "20px" }} disabled={this.state.alreadyAdded} onClick={() => this.handleAddClick(data)} />
+                    <select id={data.name} className="form-select form-select-lg mb-3">
+                        <option >No tag</option>
+                        <option >Vegan</option>
+                        <option >Carnivorous</option>
+                        <option >Allergic to diary</option>
+                        <option >Fast food lover</option>
+                    </select>
+                    <Button icon="pi pi-plus" label="Add friend" style={{ marginTop: "20px", marginLeft: "30px" }} disabled={this.state.alreadyAdded} onClick={() => this.handleAddClick(data)} />
                     </div>
+                    
                 </div>
+                
+                
 
             </div>
+             
+            </div>
+            
         );
     }
 

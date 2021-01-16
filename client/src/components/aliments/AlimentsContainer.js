@@ -110,6 +110,23 @@ class AlimentsContainer extends React.Component {
             }
         }
 
+        this.daysUntil = (data) => {
+
+            console.log(data)
+            let yearNow = parseInt((new Date()).getFullYear());
+            let monthNow = parseInt((new Date()).getMonth() + 1);
+            let dayNow = parseInt((new Date()).getDate());
+
+            
+            if (yearNow == data.substring(0, 4)) {
+                if (monthNow == data.substring(5, 7)) {
+                    
+                    return data.substring(8, 10) - dayNow;
+                }
+            }
+            return 5;
+        }
+
     }
 
     showBottomRightSuccess() {
@@ -121,7 +138,7 @@ class AlimentsContainer extends React.Component {
     }
 
     async componentDidMount() {
-        const response = await fetch("http://localhost:8080/api/aliments");
+        const response = await fetch(`http://localhost:8080/api/aliments`);
 
         const aliments = await response.json();
         let alim = this.setAlimentImage(aliments);
@@ -140,14 +157,20 @@ class AlimentsContainer extends React.Component {
     setItemBackgroundColor(data) {
         let background = "";
 
-        if (data.expirationDate.substring(0, 10) > (new Date()).getFullYear() + '-' + (new Date()).getMonth() + 1 + '-' + (new Date()).getDate() && data.status === 'AVAILABLE') {
+        if (this.daysUntil(data.expirationDate)>3 && data.status === 'AVAILABLE' ) {
             background = '#98FB98';
+            console.log('verde')
         } else {
             if (data.status === 'AVAILABLE') {
-                background = '#FAB8072';
-            } else {
-                background = 'ebebeb';
-            }
+                console.log(this.daysUntil(data.expirationDate))
+                if(this.daysUntil(data.expirationDate) <= 0){
+                    background = '#FA8072';
+                }else if(this.daysUntil(data.expirationDate) <= 3){
+
+                    background = '#F0E68C';
+                }
+                
+            } 
         }
         return background;
     }

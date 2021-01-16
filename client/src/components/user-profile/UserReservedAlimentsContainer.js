@@ -55,6 +55,23 @@ class UserReservedAlimentsContainer extends React.Component {
             }
             return alim;
         }
+
+        this.daysUntil = (data) => {
+
+            console.log(data)
+            let yearNow = parseInt((new Date()).getFullYear());
+            let monthNow = parseInt((new Date()).getMonth() + 1);
+            let dayNow = parseInt((new Date()).getDate());
+
+            
+            if (yearNow == data.substring(0, 4)) {
+                if (monthNow == data.substring(5, 7)) {
+                    
+                    return data.substring(8, 10) - dayNow;
+                }
+            }
+            return 5;
+        }
     }
 
     async componentDidMount() {
@@ -90,10 +107,12 @@ class UserReservedAlimentsContainer extends React.Component {
     setItemBackgroundColor(data) {
         let background = "";
 
-        if (data.expirationDate.substring(0, 10) > (new Date()).getFullYear() + '-' + (new Date()).getMonth() + 1 + '-' + (new Date()).getDate()) {
+        if (this.daysUntil(data.expirationDate) > 3) {
             background = '#98FB98';
-        } else {
-            background = '#FA8072';
+        } else if(this.daysUntil(data.expirationDate) <=0){
+            background = '#FA8072'
+        }else{
+            background = '#F0E68C'
         }
 
         return background;

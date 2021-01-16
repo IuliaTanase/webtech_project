@@ -19,12 +19,15 @@ class Notifications extends React.Component {
 
         this.daysUntil = (data) => {
 
+            console.log(data)
             let yearNow = parseInt((new Date()).getFullYear());
             let monthNow = parseInt((new Date()).getMonth() + 1);
             let dayNow = parseInt((new Date()).getDate());
 
-            if (yearNow === data.substring(0, 4)) {
-                if (monthNow === data.substring(5, 7)) {
+            
+            if (yearNow == data.substring(0, 4)) {
+                if (monthNow == data.substring(5, 7)) {
+                    
                     return data.substring(8, 10) - dayNow;
                 }
             }
@@ -39,7 +42,7 @@ class Notifications extends React.Component {
                 }
 
             }
-            console.log(numberOfExpiredAliments);
+            
             return numberOfExpiredAliments;
         }
 
@@ -82,13 +85,16 @@ class Notifications extends React.Component {
                                     </div>
                                     :
                                     <> {
-                                        this.daysUntil(data.expirationDate) < 5 ?
+                                        this.daysUntil(data.expirationDate) < 3 ?
+                                        
+                                       
                                             <div className='notification'>
-                                                <Message severity='warn' text={'Aliment ' + data.name + ' is going to expire in ' + this.daysUntil(data.expirationDate) + 'days'} />
+                                                <Message severity='warn' text={'Aliment ' + data.name + ' is going to expire in ' + this.daysUntil(data.expirationDate) + ' days'} />
                                             </div>
                                             :
                                             <>
                                             </>
+                                            
                                     }
                                     </>
                             }
