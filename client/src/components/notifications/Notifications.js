@@ -3,6 +3,8 @@ import Menu from '../menubar/Menu';
 import './Notifications.css'
 import { Message } from 'primereact/message';
 import { DataView } from 'primereact/dataview';
+import { Card } from 'primereact/card';
+
 
 
 class Notifications extends React.Component {
@@ -13,21 +15,21 @@ class Notifications extends React.Component {
         this.state = {
             aliments: [],
             layout: 'list',
+            title: ''
         }
 
         this.itemTemplate = this.itemTemplate.bind(this);
 
+
         this.daysUntil = (data) => {
+            let today = new Date();
 
-            console.log(data)
-            let yearNow = parseInt((new Date()).getFullYear());
-            let monthNow = parseInt((new Date()).getMonth() + 1);
-            let dayNow = parseInt((new Date()).getDate());
+            let yearNow = String(today.getFullYear());
+            let monthNow = String(today.getMonth() + 1).padStart(2, '0');
+            let dayNow = String(today.getDate()).padStart(2, '0');
 
-            
-            if (yearNow == data.substring(0, 4)) {
-                if (monthNow == data.substring(5, 7)) {
-                    
+            if (yearNow === data.substring(0, 4)) {
+                if (monthNow === data.substring(5, 7)) {
                     return data.substring(8, 10) - dayNow;
                 }
             }
@@ -36,14 +38,28 @@ class Notifications extends React.Component {
 
         this.existingExpired = () => {
             let numberOfExpiredAliments = 0;
+
             for (let aliment of this.state.aliments) {
-                if (aliment.expirationDate.substring(0, 10) < (new Date()).getFullYear() + '-' + (new Date()).getMonth() + 1 + '-' + (new Date()).getDate() && aliment.status == 'AVAILABLE') {
+                if (aliment.expirationDate.substring(0, 10) < (new Date()).getFullYear() + '-' + (new Date()).getMonth() + 1 + '-' + (new Date()).getDate() && aliment.status === 'AVAILABLE') {
                     numberOfExpiredAliments += 1;
                 }
-
             }
-            
+
             return numberOfExpiredAliments;
+        }
+
+        this.gonnaExpire = () => {
+            let nrAlimentsGonnaExpire = 0;
+
+            for (let aliment of this.state.aliments) {
+                let daysUntilExpire = this.daysUntil(aliment.expirationDate);
+
+                if (daysUntilExpire <= 3) {
+                    nrAlimentsGonnaExpire += 1;
+                }
+            }
+
+            return nrAlimentsGonnaExpire;
         }
 
     }
@@ -58,9 +74,24 @@ class Notifications extends React.Component {
             this.setState({
                 aliments: alim
             });
+
+            this.notificationsNumber();
         } else {
             alert('HTTP-error: ' + response.status);
         }
+    }
+
+    notificationsNumber = () => {
+        let alimentsGonnaExpire = [];
+        for (let aliment of this.state.aliments) {
+            let daysUntilExpire = this.daysUntil(aliment.expirationDate);
+            if (daysUntilExpire <= 3) {
+                alimentsGonnaExpire.push(aliment);
+            }
+        }
+        this.setState({
+            title: `You have ${alimentsGonnaExpire.length} notifications.`
+        });
     }
 
     itemTemplate(aliment) {
@@ -76,7 +107,6 @@ class Notifications extends React.Component {
             <>
                 {
                     data.status === 'AVAILABLE' ?
-
                         <div className="p-col-12">
                             {
                                 data.expirationDate.substring(0, 10) < (new Date()).getFullYear() + '-' + (new Date()).getMonth() + 1 + '-' + (new Date()).getDate() ?
@@ -85,23 +115,18 @@ class Notifications extends React.Component {
                                     </div>
                                     :
                                     <> {
-                                        this.daysUntil(data.expirationDate) < 3 ?
-                                        
-                                       
+                                        this.daysUntil(data.expirationDate) <= 3 ?
                                             <div className='notification'>
-                                                <Message severity='warn' text={'Aliment ' + data.name + ' is going to expire in ' + this.daysUntil(data.expirationDate) + ' days'} />
+                                                <Message className='msg' severity='warn' text={'Aliment ' + data.name + ' is going to expire in ' + this.daysUntil(data.expirationDate) + ' days'} />
                                             </div>
                                             :
-                                            <>
-                                            </>
-                                            
+                                            <> </>
                                     }
                                     </>
                             }
                         </div>
                         :
-                        <>
-                        </>
+                        <div className='notification'> <Message className='msg' severity='info' text={'Aliment ' + data.name + ' is reserved.'} /> </div>
                 }
             </>
         )
@@ -116,9 +141,11 @@ class Notifications extends React.Component {
                 <div className="dataview-demo">
                     <div className="card" >
                         {
-                            this.existingExpired() !== 0 ?
-                                <DataView value={this.state.aliments} layout={this.state.layout}
-                                    itemTemplate={this.itemTemplate} paginator rows={8} />
+                            this.existingExpired() > 0 || this.gonnaExpire() > 0 ?
+                                <Card title={this.state.title} >
+                                    <DataView value={this.state.aliments} layout={this.state.layout}
+                                        itemTemplate={this.itemTemplate} paginator rows={8} />
+                                </Card>
                                 :
                                 <div>
                                     <svg>

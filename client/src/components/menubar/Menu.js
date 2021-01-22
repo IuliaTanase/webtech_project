@@ -53,11 +53,13 @@ class Menu extends React.Component {
                         items: [
                             {
                                 label: 'via Facebook',
-                                icon: 'pi pi-fw pi-facebook'
-                            },
-                            {
-                                label: 'via Instagram',
-                                icon: 'pi pi-fw pi-camera'
+                                icon: 'pi pi-fw pi-facebook',
+                                command: () => {
+                                    window.FB.ui({
+                                        method: 'share',
+                                        href: 'https://alimentespeciale.ro/'//'https://developers.facebook.com/docs/'   /*http://localhost:3000/aliments*/
+                                    }, function (response) { });
+                                }
                             }
                         ]
                     }

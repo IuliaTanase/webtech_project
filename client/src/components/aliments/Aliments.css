@@ -49,7 +49,6 @@
     font-size: 1.2rem;
     font-weight: 600;
     margin-bottom: .5rem;
-    align-self: flex-end;
 }
 
 .dataview-demo .product-list-item .product-list-action {
@@ -137,6 +136,19 @@ h1 {
     text-align: center;
     font-weight: lighter;
     font-size: 1.3rem;
+}
+
+#btnShare {
+    position: fixed;
+    bottom: 10px;
+    left: 10px;
+} 
+
+#alreadyYourFriend {
+    font-style: italic;
+    color: green;
+    font-size: 1.2em;
+    font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
 }
 
 .prod-expDate, .prod-category {

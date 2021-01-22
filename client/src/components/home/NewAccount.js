@@ -38,24 +38,24 @@ class NewAccount extends React.Component {
                     return false;
                 } else {
                     let emailMatch = /^[a-zA-Z0-9.*-_]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/;
-                    if (this.state.email.length < 8 || this.state.email.length > 30 || !this.state.email.match(emailMatch)) {
+                    if (this.state.email.length < 10 || this.state.email.length > 50 || !this.state.email.match(emailMatch)) {
                         this.setState({
-                            message: 'Email must have between 8 and 30 characters!',
+                            message: 'Email must have between 10 and 50 characters!',
                             statusOk: false
                         });
                         return false;
                     } else {
-                        if (this.state.userName.length < 3 || this.state.userName.length > 20) {
+                        if (this.state.userName.length < 4 || this.state.userName.length > 20) {
                             this.setState({
-                                message: 'Username must have between 3 and 20 characters!',
+                                message: 'Username must have between 4 and 20 characters!',
                                 statusOk: false
                             });
                             return false;
                         } else {
                             let passwordMatch = /^[0-9a-zA-Z]+$/;
-                            if (this.state.password.length < 4 || !this.state.password.match(passwordMatch)) {
+                            if (this.state.password.length < 4 || this.state.password.length > 20 || !this.state.password.match(passwordMatch)) {
                                 this.setState({
-                                    message: 'Password must have at least 4 letters & numbers!',
+                                    message: 'Password must have between 4 and 20 letters & numbers!',
                                     statusOk: false
                                 });
                                 return false;

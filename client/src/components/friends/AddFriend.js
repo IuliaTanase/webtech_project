@@ -3,11 +3,8 @@ import { DataView } from 'primereact/dataview';
 import { Button } from 'primereact/button';
 import Menu from "../menubar/Menu";
 import { Toast } from 'primereact/toast';
+import { Dropdown } from 'primereact/dropdown'
 import '../aliments/Aliments.css';
-import '../bootstrap.css'
-import './AddFriend.css'
-
-
 
 
 class AddFriend extends React.Component {
@@ -19,18 +16,20 @@ class AddFriend extends React.Component {
             friends: [],
             layout: 'list',
             toastBR: '',
-            alreadyAdded: false,
-            tag:'No tag'
+            tags: {}
         }
 
         this.itemTemplate = this.itemTemplate.bind(this);
 
-    
+        this.tags = [
+            { label: 'No tag', value: 'No tag' },
+            { label: 'Vegan', value: 'Vegan' },
+            { label: 'Carnivorous', value: 'Carnivorous' },
+            { label: 'Allergic to diary', value: 'Allergic to diary' },
+            { label: 'Fast food lover', value: 'Fast food lover' }
+        ];
 
         this.handleAddClick = async (user) => {
-            
-            const select = document.getElementById(user.name)
-            console.log(select.options[select.selectedIndex].text)
 
             const SERVER = `http://localhost:8080/api/users`;
             const currentUserId = JSON.parse(localStorage.getItem("user")).id;
@@ -38,9 +37,6 @@ class AddFriend extends React.Component {
             const foundIndex = this.state.friends.findIndex(u => user.userName === u.userName);
             if (foundIndex !== -1) {
                 this.showBottomRightError("This user is already your friend!");
-                this.setState({
-                    alreadyAdded: true
-                });
             } else {
                 const postResponse = await fetch(`${SERVER}/${currentUserId}/friends`, {
                     method: 'POST',
@@ -51,26 +47,23 @@ class AddFriend extends React.Component {
                         userName: user.userName,
                         name: user.name,
                         email: user.email,
-                        tag: select.options[select.selectedIndex].text
+                        tag: this.state.tags[user.id]
                     })
                 });
                 if (postResponse.ok) {
                     await postResponse.json();
+                    let newFriends = this.state.friends;
+                    newFriends.push(user);
                     this.showBottomRightSuccess();
                     this.setState({
-                        alreadyAdded: true
+                        friends: newFriends
                     });
                 } else {
                     this.showBottomRightError("Oops! A problem has occured. Try again later.");
                 }
-
             }
-
-
-}
+        }
     }
-
-   
 
 
     async componentDidMount() {
@@ -88,11 +81,16 @@ class AddFriend extends React.Component {
         const response = await fetch("http://localhost:8080/api/users");
         if (response.ok) {
             const allUsers = await response.json();
+            let localTags = {};
+            for (let i = 0; i < allUsers.length; i++) {
+                localTags[allUsers[i].id] = '';
+            }
             const foundCurrentUserIndex = allUsers.findIndex(user => user.id === currentUserId);
             if (foundCurrentUserIndex !== -1) {
                 allUsers.splice(foundCurrentUserIndex, 1);
                 this.setState({
-                    users: allUsers
+                    users: allUsers,
+                    tags: localTags
                 });
             }
         } else {
@@ -116,38 +114,51 @@ class AddFriend extends React.Component {
         this.toastBR.show({ severity: 'error', summary: 'Error', detail: `${detail}`, life: 3000 });
     }
 
+    setNewTags(id, newValue) {
+        let local = this.state.tags;
+        local[id] = newValue;
+
+        this.setState({
+            tags: local
+        })
+    }
+
+    checkFriend(user) {
+        const foundIndex = this.state.friends.findIndex(u => user.userName === u.userName);
+        if (foundIndex !== -1) {
+            return true;
+        }
+
+        return false;
+    }
+
     renderListItem(data) {
         return (
-            <div>
-                <div className="p-col-12">
-                <div className="product-list-item">
-                    <img src={`images/unknown-user.png`} onError={(e) => e.target.src = 'https://www.primefaces.org/wp-content/uploads/2020/05/placeholder.png'} alt={data.name} />
-                    <div className="product-list-detail" style={{width:"70vw"}}>
-                        <div className="product-name">{data.name}</div>
-                        <div style={{ marginTop: "15px" }}>
-                            <i className="pi pi-envelope product-category-icon"></i><span className="product-category">{data.email}</span>
+            <div style={{ backgroundColor: "#ebebeb", width: "100%", borderTop: "1px solid lightgray" }}>
+                <div className="p-col-12" >
+                    <div className="product-list-item">
+                        <img src={`images/unknown-user.png`} onError={(e) => e.target.src = 'https://www.primefaces.org/wp-content/uploads/2020/05/placeholder.png'} alt={data.name} />
+                        <div className="product-list-detail" style={{ width: "70vw" }}>
+                            <div className="product-name">{data.name}</div>
+                            <div style={{ marginTop: "15px" }}>
+                                <i className="pi pi-envelope product-category-icon"></i><span className="product-category">{data.email}</span>
+                            </div>
+                            <div className="product-weight"> <i className="pi pi-user product-category-icon"></i> {data.userName}</div>
                         </div>
-                        <div className="product-weight"> <i className="pi pi-user product-category-icon"></i> {data.userName}</div>
-                    </div>
-                    <div className="users-list-action">
-                    <select id={data.name} className="form-select form-select-lg mb-3">
-                        <option >No tag</option>
-                        <option >Vegan</option>
-                        <option >Carnivorous</option>
-                        <option >Allergic to diary</option>
-                        <option >Fast food lover</option>
-                    </select>
-                    <Button icon="pi pi-plus" label="Add friend" style={{ marginTop: "20px", marginLeft: "30px" }} disabled={this.state.alreadyAdded} onClick={() => this.handleAddClick(data)} />
-                    </div>
-                    
-                </div>
-                
-                
 
+                        {!this.checkFriend(data) ?
+                            <>
+                                <Dropdown id="dropdown" style={{ marginTop: "15px" }} placeholder="Select a tag" value={this.state.tags[data.id]}
+                                    optionLabel="label" optionValue="value" options={this.tags} onChange={(e) => this.setNewTags(data.id, e.target.value)} />
+
+                                <Button icon="pi pi-plus" label="Add friend" style={{ marginTop: "20px", marginLeft: "30px" }} onClick={() => this.handleAddClick(data)} />
+                            </>
+                            :
+                            <p id="alreadyYourFriend">Already your friend</p>
+                        }
+                    </div>
+                </div>
             </div>
-             
-            </div>
-            
         );
     }
 

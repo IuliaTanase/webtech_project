@@ -7,10 +7,17 @@ import 'primereact/resources/primereact.min.css';
 import 'primeicons/primeicons.css';
 import 'primeflex/primeflex.css';
 
+// import { initFacebookSdk } from './initFacebook'
+
+// initFacebookSdk().then(startApp);
+
+// function startApp() {
 ReactDOM.render(
   <React.StrictMode>
     <App />
   </React.StrictMode>,
   document.getElementById('root')
 );
+// }
+
 

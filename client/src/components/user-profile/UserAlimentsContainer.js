@@ -182,17 +182,24 @@ class UserAlimentsContainer extends React.Component {
                 }
             }
         }
+
+        this.shareOnFacebook = () => {
+            window.FB.ui({
+                method: 'share',
+                href: 'https://alimentespeciale.ro/'//'https://developers.facebook.com/docs/'   /*http://localhost:3000/aliments*/
+            }, function (response) { });
+        }
+
+
         this.daysUntil = (data) => {
+            let today = new Date();
 
-            console.log(data)
-            let yearNow = parseInt((new Date()).getFullYear());
-            let monthNow = parseInt((new Date()).getMonth() + 1);
-            let dayNow = parseInt((new Date()).getDate());
+            let yearNow = String(today.getFullYear());
+            let monthNow = String(today.getMonth() + 1).padStart(2, '0');
+            let dayNow = String(today.getDate()).padStart(2, '0');
 
-            
-            if (yearNow == data.substring(0, 4)) {
-                if (monthNow == data.substring(5, 7)) {
-                    
+            if (yearNow === data.substring(0, 4)) {
+                if (monthNow === data.substring(5, 7)) {
                     return data.substring(8, 10) - dayNow;
                 }
             }
@@ -238,19 +245,16 @@ class UserAlimentsContainer extends React.Component {
         let background = "";
 
         if (this.daysUntil(data.expirationDate) > 3 && data.status === 'AVAILABLE') {
-            background = '#98FB98';
-
+            background = '#bae3ba';
         } else {
-            if (data.status == 'AVAILABLE') {
-                if(this.daysUntil(data.expirationDate) <= 0){
-
-                    background = '#FA8072';
-                }else if (this.daysUntil(data.expirationDate) <=3){
-                    background = '#F0E68C';
+            if (data.status === 'AVAILABLE') {
+                if (this.daysUntil(data.expirationDate) <= 0) {
+                    background = '#cf6b5f';
+                } else if (this.daysUntil(data.expirationDate) <= 3) {
+                    background = '#ebe4ab';
                 }
-                
             } else {
-                background = 'ebebeb';
+                background = '#ebebeb';
             }
         }
         return background;
@@ -258,7 +262,7 @@ class UserAlimentsContainer extends React.Component {
 
     renderListItem(data) {
         return (
-            <div className="p-col-12" style={{ backgroundColor: this.setItemBackgroundColor(data) }}>
+            <div className="p-col-12" style={{ backgroundColor: this.setItemBackgroundColor(data), borderTop: "1px solid gray" }}>
                 <div className="product-list-item">
                     <img src={`images/${data.image}`} onError={(e) => e.target.src = 'https://www.primefaces.org/wp-content/uploads/2020/05/placeholder.png'} alt={data.name} />
                     <div className="product-list-detail">
@@ -270,7 +274,7 @@ class UserAlimentsContainer extends React.Component {
                     <div className="product-list-action">
                         <span className={`product-badge status-${data.status.toLowerCase()}`}>{data.status}</span>
                         <Button icon="pi pi-pencil" label="Edit" style={{ marginTop: "30px" }} onClick={() => this.handleEditClick(data)} />
-                        <Button icon="pi pi-trash" label="Delete" style={{ marginTop: "10px", backgroundColor: "#9c0e02" }} onClick={() => this.showDeleteDialog(data)} />
+                        <Button className="p-button-danger" icon="pi pi-trash" label="Delete" style={{ marginTop: "10px" }} onClick={() => this.showDeleteDialog(data)} />
                     </div>
                 </div>
             </div>
@@ -295,8 +299,9 @@ class UserAlimentsContainer extends React.Component {
                 <div className="dataview-demo" >
                     <div className="card" >
                         <DataView value={this.state.aliments} layout={this.state.layout}
-                            itemTemplate={this.itemTemplate} paginator rows={8} />
-
+                            itemTemplate={this.itemTemplate} paginator rows={4} />
+                        <Button id="btnShare" label="Share on Facebook" icon="pi pi-send" className="p-button-rounded p-button-warning"
+                            onClick={this.shareOnFacebook} />
                     </div>
                 </div>
                 <Dialog header="Edit aliment" visible={this.state.displayDialog} style={{ width: '50vw' }} onHide={this.onHide}>
@@ -324,7 +329,6 @@ class UserAlimentsContainer extends React.Component {
                             <div style={{ display: "flex", justifyContent: "center", marginTop: "30px" }}>
                                 <Button label="Apply" onClick={this.saveChanges} />
                             </div>
-
                         </>
                     }
                 </Dialog>

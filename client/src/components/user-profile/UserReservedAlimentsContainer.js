@@ -1,6 +1,5 @@
 import React from 'react'
 import { DataView } from 'primereact/dataview';
-import { Button } from 'primereact/button';
 import Menu from "../menubar/Menu";
 
 class UserReservedAlimentsContainer extends React.Component {
@@ -57,21 +56,20 @@ class UserReservedAlimentsContainer extends React.Component {
         }
 
         this.daysUntil = (data) => {
+            let today = new Date();
 
-            console.log(data)
-            let yearNow = parseInt((new Date()).getFullYear());
-            let monthNow = parseInt((new Date()).getMonth() + 1);
-            let dayNow = parseInt((new Date()).getDate());
+            let yearNow = String(today.getFullYear());
+            let monthNow = String(today.getMonth() + 1).padStart(2, '0');
+            let dayNow = String(today.getDate()).padStart(2, '0');
 
-            
-            if (yearNow == data.substring(0, 4)) {
-                if (monthNow == data.substring(5, 7)) {
-                    
+            if (yearNow === data.substring(0, 4)) {
+                if (monthNow === data.substring(5, 7)) {
                     return data.substring(8, 10) - dayNow;
                 }
             }
             return 5;
         }
+
     }
 
     async componentDidMount() {
@@ -108,11 +106,11 @@ class UserReservedAlimentsContainer extends React.Component {
         let background = "";
 
         if (this.daysUntil(data.expirationDate) > 3) {
-            background = '#98FB98';
-        } else if(this.daysUntil(data.expirationDate) <=0){
-            background = '#FA8072'
-        }else{
-            background = '#F0E68C'
+            background = '#bae3ba';
+        } else if (this.daysUntil(data.expirationDate) <= 0) {
+            background = '#cf6b5f'
+        } else {
+            background = '#ebe4ab'
         }
 
         return background;

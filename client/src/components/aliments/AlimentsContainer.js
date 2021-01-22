@@ -111,20 +111,16 @@ class AlimentsContainer extends React.Component {
         }
 
         this.daysUntil = (data) => {
-
-            console.log(data)
             let yearNow = parseInt((new Date()).getFullYear());
             let monthNow = parseInt((new Date()).getMonth() + 1);
             let dayNow = parseInt((new Date()).getDate());
 
-            
-            if (yearNow == data.substring(0, 4)) {
-                if (monthNow == data.substring(5, 7)) {
-                    
+            if (yearNow === data.substring(0, 4)) {
+                if (monthNow === data.substring(5, 7)) {
                     return data.substring(8, 10) - dayNow;
                 }
             }
-            return 5;
+            return data.substring(8, 10) - dayNow;//return 5;
         }
 
     }
@@ -157,20 +153,17 @@ class AlimentsContainer extends React.Component {
     setItemBackgroundColor(data) {
         let background = "";
 
-        if (this.daysUntil(data.expirationDate)>3 && data.status === 'AVAILABLE' ) {
-            background = '#98FB98';
-            console.log('verde')
+        if (this.daysUntil(data.expirationDate) > 3 && data.status === 'AVAILABLE') {
+            background = '#bae3ba';
         } else {
             if (data.status === 'AVAILABLE') {
                 console.log(this.daysUntil(data.expirationDate))
-                if(this.daysUntil(data.expirationDate) <= 0){
-                    background = '#FA8072';
-                }else if(this.daysUntil(data.expirationDate) <= 3){
-
-                    background = '#F0E68C';
+                if (this.daysUntil(data.expirationDate) <= 0) {
+                    background = '#cf6b5f';
+                } else if (this.daysUntil(data.expirationDate) <= 3) {
+                    background = '#ebe4ab';
                 }
-                
-            } 
+            }
         }
         return background;
     }
@@ -202,7 +195,8 @@ class AlimentsContainer extends React.Component {
                                 <i className="pi pi-th-large product-category-icon"></i>
                                 <span className="product-weight">{data.weight} Kg</span>
                             </div>
-                            <Button className="p-button-sm" icon="pi pi-shopping-cart" label="GET IT" disabled={data.status === 'RESERVED'} onClick={() => this.handleClick(data)}></Button>
+                            <Button className="p-button-sm" icon="pi pi-shopping-cart" label="GET IT" disabled={data.status === 'RESERVED'}
+                                onClick={() => this.handleClick(data)}></Button>
                         </div>
                     </div>
                 </div>

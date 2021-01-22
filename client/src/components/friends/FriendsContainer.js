@@ -37,7 +37,7 @@ class FriendsContainer extends React.Component {
 
     renderListItem(data) {
         return (
-            <div className="p-col-12">
+            <div className="p-col-12" style={{ backgroundColor: "#ebebeb", borderTop: "1px solid lightgray" }}>
                 <div className="product-list-item">
                     <img src={`images/unknown-user.png`} onError={(e) => e.target.src = 'https://www.primefaces.org/wp-content/uploads/2020/05/placeholder.png'} alt={data.name} />
                     <div className="product-list-detail">
@@ -45,9 +45,9 @@ class FriendsContainer extends React.Component {
                         <div style={{ marginTop: "15px" }}>
                             <i className="pi pi-envelope product-category-icon"></i><span className="product-category">{data.email}</span>
                         </div>
-                        <div className="product-weight"> <i className="pi pi-user product-category-icon"></i> {data.userName}</div>
-                        <div className="product-weight"> <i className="pi pi-tag"></i> {data.tag}</div>
+                        <div style={{ marginTop: "15px" }} className="product-weight"> <i className="pi pi-user product-category-icon"></i> {data.userName}</div>
                     </div>
+                    <div className="product-weight"> <i className="pi pi-tag"></i> {data.tag}</div>
                 </div>
 
             </div>
